@@ -1,6 +1,4 @@
 var channel = require('../controller/channel');
-var Channel = require('../model/Channel');
-var handler = require('./../../util/handler');
 
 module.exports = function (router) {
 
