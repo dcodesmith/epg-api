@@ -8,7 +8,6 @@ function assertRequest(baseUrl) {
 
     request[options.method || 'post'](url)
       .send(options.data || {})
-      // .expect('Content-Type', /json/)
       .expect(options.statusCode)
       .end(function(err, res){
         if (err) {
