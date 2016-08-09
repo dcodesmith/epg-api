@@ -14,7 +14,12 @@ app.use(bodyParser.json());
 app.use(validator());
 
 require('./routes')(router);
+
 app.use('/api', router);
+router.use(function(req, res, next) {
+  console.log('%s %s %s', req.method, req.url, req.path);
+  next();
+});
 app.use('/api', function(err, req, res, next) {
   res
     .status(err.status || 500)

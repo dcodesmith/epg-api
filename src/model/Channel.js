@@ -6,16 +6,16 @@ var crud = require('./plugins/crud');
 
 var Schema = mongoose.Schema;
 var Channel = new Schema({
-	name: {
-		type: String,
-		required: true
-	},
-	code: {
-		type: String,
-		required: true
-	},
-	type: String,
-	description: String
+  name: {
+    type: String,
+    required: true
+  },
+  code: {
+    type: String,
+    required: true
+  },
+  type: String,
+  description: String
 }, {timestamps: true});
 
 // .virtual, .post, .static, .pre
