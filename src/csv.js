@@ -1,9 +1,6 @@
-var fs = require('fs');
-var _ = require('lodash');
 var csv = require('fast-csv');
 var Channel = require('./model/Channel');
 var Programme = require('./model/Programme');
-var rowCount = 0;
 var validRows = [];
 var invalidRows = [];
 
