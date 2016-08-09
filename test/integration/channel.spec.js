@@ -79,7 +79,9 @@ describe(`${baseUrl}`, () => {
               });
           });
 
-          it(`should have error messages matching the invalid fields`, () => {});
+          it(`should have error messages matching the invalid fields`, () => {
+            // TODO
+          });
 
           it(`400`, () => {
             expect(response.statusCode).to.equal(400);

@@ -6,7 +6,7 @@ var error;
 function errorHandler(next, err) {
   var err = new Error(err);
   err.status = 400;
-  return next(err);
+  next(err);
 }
 
 module.exports = function (model) {
@@ -32,7 +32,7 @@ module.exports = function (model) {
 
       modelHandler.create(req, function(err, item) {
         if (err) {
-          errorHandler(next, err);
+          return errorHandler(next, err);
         }
 
         res.status(201).json(item);
@@ -42,7 +42,7 @@ module.exports = function (model) {
     readAll: function (req, res, next) {
       modelHandler.read.all(req, function(err, items) {
         if (err) {
-          errorHandler(next, err);
+          return errorHandler(next, err);
         }
 
         res.status(200).json(items);
@@ -52,7 +52,7 @@ module.exports = function (model) {
     readOne: function (req, res, next) {
       modelHandler.read.one(req, function(err, item) {
         if (err) {
-          errorHandler(next, err);
+          return errorHandler(next, err);
         }
 
         if (!item) {
@@ -66,7 +66,7 @@ module.exports = function (model) {
     update: function (req, res, next) {
       modelHandler.update(req, function(err, item) {
         if (err) {
-          errorHandler(next, err);
+          return errorHandler(next, err);
         }
 
         if (!item) {
@@ -80,7 +80,7 @@ module.exports = function (model) {
     delete: function (req, res, next) {
       modelHandler.delete(req, function(err, item) {
         if (err) {
-          errorHandler(next, err);
+          return errorHandler(next, err);
         }
 
         if (!item) {
