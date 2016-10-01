@@ -1,7 +1,4 @@
-'use strict';
-
 function createdModified(schema) {
-
   schema.virtual('updatedAtISO').get(function createdModifiedVirtualupdatedAtISO() {
     return new Date(this.updatedAt).toISOString();
   });
@@ -15,12 +12,12 @@ function createdModified(schema) {
     virtuals: true
   });
 
-  schema.options.toJSON.transform = function(doc, ret) {
+  schema.options.toJSON.transform = (doc, ret) => {
     delete ret._id;
     delete ret.__v;
+
     return ret;
   };
-
 }
 
 module.exports = createdModified;

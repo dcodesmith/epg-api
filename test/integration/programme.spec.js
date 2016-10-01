@@ -25,7 +25,7 @@ const clonedMockData = programmeMockData.map((data) => {
   return clonedData;
 });
 
-describe.only(`${baseUrl}`, () => {
+describe(`${baseUrl}`, () => {
   after((done) => {
     Programme.remove(done);
   });
