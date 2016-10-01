@@ -1,7 +1,6 @@
-var channel = require('../controller/channel');
+const channel = require('../controller/channel');
 
 module.exports = function (router) {
-
   router
     .post('/channels', channel.create)
     .get('/channels/:id', channel.readOne)
@@ -9,5 +8,4 @@ module.exports = function (router) {
     .put('/channels/:id', channel.update)
     .delete('/channels/:id', channel.delete)
     .delete('/channels', channel.delete);
-
-}
+};

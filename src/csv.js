@@ -1,16 +1,71 @@
-var csv = require('fast-csv');
-var Channel = require('./model/Channel');
-var Programme = require('./model/Programme');
-var validRows = [];
-var invalidRows = [];
+const csv = require('fast-csv');
+const Channel = require('./model/Channel');
+const Programme = require('./model/Programme');
+
+const validRows = [];
+const invalidRows = [];
 
 function parse(csvData) {
-  var options = {
+  const options = {
     trim: true,
     headers: true
-  }
+  };
 
   return new Promise((resolve, reject) => {
+    const onValidateRow = (row, next) => {
+      let isRowValid = true;
+      const programme = new Programme(row);
+
+      programme.validate((err) => {
+        if (err) {
+          isRowValid = !isRowValid;
+        }
+        next(null, isRowValid);
+      });
+    };
+
+    const onInvalidRow = (invalidRow, rowNumber) => {
+      invalidRows.push({
+        row: rowNumber,
+        data: invalidRow
+      });
+    };
+
+    const onData = (validRow) => {
+      validRows.push(validRow);
+    };
+
+    const onEnd = () => {
+      let errors = [];
+      // errors = processErrors(validationErrors[iter]);
+      errors = invalidRows.map((invalidItem) => {
+          return {
+            row: invalidItem.rowNumber,
+            data: invalidItem.data
+          };
+      });
+
+      if (errors.length) {
+        return reject(errors);
+      }
+      resolve(validRows);
+    };
+
+    const onTransform = (row, next) => {
+      const findChannel = Channel.findOne({ code: row.channelCode }).exec();
+      delete row.channelCode;
+
+      // TODO: Perhaps pass in array of channels as a paremater from controller.
+      findChannel.then((channel) => {
+        // TODO: ^^^
+        // if (!channel) {
+        //   return next();
+        // }
+        row.channel = channel.id;
+        next(null, row);
+      }, next);
+    };
+
     csv
       .fromStream(csvData, options)
       .transform(onTransform)
@@ -18,66 +73,7 @@ function parse(csvData) {
       .on('data-invalid', onInvalidRow)
       .on('data', onData)
       .on('end', onEnd);
-
-    function onValidateRow(row, next) {
-      var isRowValid = true;
-      var programme;
-
-      programme = new Programme(row);
-
-      programme.validate((err, prog) => {
-        if (err) {
-          isRowValid = !isRowValid;
-        }
-        next(null, isRowValid);
-      });
-    }
-
-    function onInvalidRow(invalidRow, rowNumber) {
-      invalidRows.push({
-        row: rowNumber,
-        data: invalidRow
-      });
-    }
-
-    function onData(validRow) {
-      validRows.push(validRow);
-    }
-
-    function onEnd() {
-      var errors = [];
-      // errors = processErrors(validationErrors[iter]);
-      errors = invalidRows.map((invalidItem) => {
-          return {
-            row: invalidItem.rowNumber,
-            data: invalidItem.data
-          }
-      });
-
-      if (errors.length) {
-        return reject(errors);
-      }
-      resolve(validRows);
-    }
-
-    function onTransform(row, next) {
-      var findChannel = Channel.findOne({code: row.channelCode}).exec();
-      delete row.channelCode;
-
-      // TODO: Perhaps pass in array of channels as a paremater from controller.
-      findChannel.then(function(channel) {
-        // TODO: ^^^
-        // if (!channel) {
-        //   return next();
-        // }
-        row.channel = channel.id;
-        next(null, row);
-      }, next)
-    }
-
   });
 }
 
-module.exports = {
-  parse: parse
-};
+module.exports = { parse };

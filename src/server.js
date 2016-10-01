@@ -1,10 +1,12 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var router = express.Router();
-var db = require('./../util/db');
-var cors = require('cors');
-var validator = require('express-validator');
+const express = require('express');
+const bodyParser = require('body-parser');
+const HTTPStatus = require('http-status');
+
+const app = express();
+const router = express.Router(); // eslint-disable-line new-cap
+const db = require('./../util/db');
+const cors = require('cors');
+const validator = require('express-validator');
 
 db.connect();
 
@@ -16,14 +18,14 @@ app.use(validator());
 require('./routes')(router);
 
 app.use('/api', router);
-router.use(function(req, res, next) {
+router.use((req, res, next) => {
   console.log('%s %s %s', req.method, req.url, req.path);
   next();
 });
-app.use('/api', function(err, req, res, next) {
+app.use('/api', (err, req, res) => {
   res
-    .status(err.status || 500)
-    .json({message: err.message, error: err.error || {}});
+    .status(err.status || HTTPStatus.INTERNAL_SERVER_ERROR)
+    .json({ message: err.message, error: err.error || {} });
 });
 
 module.exports = app;

@@ -1,69 +1,47 @@
-'use strict';
+const mongoose = require('mongoose');
+const winston = require('winston');
 
-var mongoose = require('mongoose');
-var winston = require('winston');
-var username = process.env.DATABASEUSER;
-var password = process.env.DATABASEPASSWORD;
-var port = process.env.DATABASEPORT;
-var name = process.env.DATABASENAME;
-var RECONNECT_TIME = 5000;
-var STATES = {
-    '0': {
-      status: 'Disconnected',
-      code: 0
-    },
-    '1': {
-      status: 'Connected',
-      code: 1
-    },
-    '2': {
-      status: 'Connecting',
-      code: 2
-    },
-    '3': {
-      status: 'Disconnecting',
-      code: 3
-    },
-    '4': {
-      status: 'Unable to connect to database',
-      code: 4
-    },
-    '5': {
-      status: 'Unable to connect to database',
-      code: 99
-    }
-  };
+const username = process.env.DATABASEUSER;
+const password = process.env.DATABASEPASSWORD;
+const port = process.env.DATABASEPORT;
+const name = process.env.DATABASENAME;
+const RECONNECT_TIME = 5000;
+const STATES = {
+  0: { status: 'Disconnected', code: 0 },
+  1: { status: 'Connected', code: 1 },
+  2: { status: 'Connecting', code: 2 },
+  3: { status: 'Disconnecting', code: 3 },
+  4: { status: 'Unable to connect to database', code: 4 },
+  5: { status: 'Unable to connect to database', code: 99 }
+};
 
-function createDbCredentialString() {
+const createDbCredentialString = () => {
   if (!username && !password) {
     return '';
   }
-  return username + ':' + password + '@';
-}
 
-function createDbUrl(dbCredentials, db) {
-  return 'mongodb://' + dbCredentials + db + ':' + port + '/' + name;
-}
+  return `${username}:${password}@`;
+};
 
-function getReplicaHostString() {
-  var hosts = process.env.DBSERVERS.split(',');
-  var hostsArray = [];
-  var dbCredentials = createDbCredentialString();
-  var dbUrl;
+const getReplicaHostString = () => {
+  const hosts = process.env.DBSERVERS.split(',');
+  const hostsArray = [];
+  const dbCredentials = createDbCredentialString();
+  let dbUrl;
 
-  hosts.forEach(function(db) {
-    dbUrl = createDbUrl(dbCredentials, db);
+  hosts.forEach((db) => {
+    dbUrl = `mongodb://${dbCredentials}${db}:${port}/${name}`;
 
     hostsArray.push(dbUrl);
   });
 
   return hostsArray.join(',');
-}
+};
 
 // http://bites.goodeggs.com/posts/reconnecting-to-mongodb-when-mongoose-connect-fails-at-startup/
 
-function connectWithRetry(hostString, options) {
-  return mongoose.connect(hostString, options, function(err) {
+const connectWithRetry = (hostString, options) => {
+  mongoose.connect(hostString, options, (err) => {
     if (err) {
       winston.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
       mongoose.disconnect();
@@ -72,22 +50,22 @@ function connectWithRetry(hostString, options) {
     // TODO: replace with winston logger
     console.log(hostString, STATES[mongoose.connection.readyState]);
   });
-}
+};
 
 module.exports = {
-  connect: function() {
-    var hostString = getReplicaHostString();
-    var options = {
+  connect() {
+    const hostString = getReplicaHostString();
+    const options = {
       server: {
         auto_reconnect: true
       }
     };
     connectWithRetry(hostString, options);
   },
-  disconnect: function(next) {
+  disconnect(next) {
     return mongoose.disconnect(next);
   },
-  status: function() {
+  status() {
     return STATES[mongoose.connection.readyState];
   }
 };

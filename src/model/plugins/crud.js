@@ -1,15 +1,11 @@
-'use strict';
+const _ = require('lodash');
 
-var _ = require('lodash');
-
-module.exports = function(schema) {
-
+module.exports = (schema) => {
   // schema.static('createOne', function(options, cb) {
   //   (new this(options.data)).save(cb);
   // });
 
   schema.static('readAll', function (options) {
-
     if (typeof options.query === 'string') {
       options.find.$where = options.query;
     }
@@ -30,15 +26,15 @@ module.exports = function(schema) {
       .populate(options.populate || '');
   });
 
-  schema.static('update', function(options) {
+  schema.static('update', function (options) {
     return this.findOneAndUpdate(options.query, options.data);
   });
 
-  schema.static('delete', function(options) {
+  schema.static('delete', function (options) {
     return this.remove(options.query);
   });
 
-  schema.method('select', function(fields) {
+  schema.method('select', function (fields) {
     return _.pick(this.toJSON(), fields);
   });
 };

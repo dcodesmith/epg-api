@@ -1,11 +1,10 @@
-'use strict';
+const mongoose = require('mongoose');
+const createdModified = require('./plugins/createdModified');
+const crud = require('./plugins/crud');
+const moment = require('moment-timezone');
 
-var mongoose = require('mongoose');
-var createdModified = require('./plugins/createdModified');
-var crud = require('./plugins/crud');
-var moment = require('moment-timezone');
-var Schema = mongoose.Schema;
-var Programme = new Schema({
+const Schema = mongoose.Schema;
+const Programme = new Schema({
   channel: {
     type: Schema.Types.ObjectId,
     ref: 'Channel',
@@ -41,7 +40,7 @@ var Programme = new Schema({
     required: true
   },
   frequency: String
-}, {timestamps: true});
+}, { timestamps: true });
 
 mongoose.Promise = Promise;
 

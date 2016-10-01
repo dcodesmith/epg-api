@@ -1,12 +1,20 @@
-'use strict';
+const Programme = require('../model/Programme');
+const csv = require('../csv');
+const stream = require('stream');
+const index = require('./index')(Programme);
+const HTTPStatus = require('http-status');
 
-var Programme = require('../model/Programme');
-var csv = require('../csv');
-var stream = require('stream');
-var index = require('./index')(Programme);
+const errorHandler = (next, err) => {
+  if (err) {
+    const error = new Error(err);
+    error.status = 400;
 
-exports.import = function(req, res, next) {
-  var bufferStream = new stream.PassThrough();
+    next(err);
+  }
+};
+
+exports.import = (req, res, next) => {
+  const bufferStream = new stream.PassThrough();
 
   if (!req.file) {
     return res.status(400).json({
@@ -17,23 +25,16 @@ exports.import = function(req, res, next) {
   bufferStream.end(req.file.buffer);
 
   csv.parse(bufferStream)
-    .then(function(result) {
-      console.log(result.length);
+    .then((result) => {
       return Programme.create(result);
-    }, function(error) {
-      res.status(400).json({errors: error});
+    }, (error) => {
+      res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
     })
-    .then(function(programmes) {
-      res.status(201).json(programmes);
-    }, errorHandler);
-}
-
-function errorHandler(err) {
-  if (err) {
-    var err = new Error(err);
-    err.status = 400;
-    next(err);
-  }
-}
+    .then((programmes) => {
+      res.status(HTTPStatus.CREATED).json(programmes);
+    }, (err) => {
+      errorHandler(next, err);
+    });
+};
 
 Object.assign(exports, index);

@@ -1,22 +1,22 @@
-var handler = require('./../../util/handler');
-var validators = require('./validators');
-var util = require('util');
-var error;
+const HTTPStatus = require('http-status');
+const handler = require('./../../util/handler');
+// const validators = require('./validators');
 
 function errorHandler(next, err) {
-  var err = new Error(err);
-  err.status = 400;
+  const error = new Error(err);
+  error.status = HTTPStatus.BAD_REQUEST;
+
   next(err);
 }
 
-module.exports = function (model) {
-  var modelHandler = handler(model);
-  var validator = validators(model.modelName.toLowerCase());
+module.exports = (model) => {
+  const modelHandler = handler(model);
+  // const validator = validators(model.modelName.toLowerCase());
 
   return {
-    create: function (req, res, next) {
+    create(req, res, next) {
       // TODO: Add error message. And read them in the tests
-      // var temp;
+      // let temp;
       //
       // req.check(validator.create);
       // error = req.validationErrors();
@@ -30,65 +30,65 @@ module.exports = function (model) {
       //   return next(error);
       // }
 
-      modelHandler.create(req, function(err, item) {
+      modelHandler.create(req, (err, item) => {
         if (err) {
           return errorHandler(next, err);
         }
 
-        res.status(201).json(item);
+        return res.status(HTTPStatus.CREATED).json(item);
       });
     },
 
-    readAll: function (req, res, next) {
-      modelHandler.read.all(req, function(err, items) {
+    readAll(req, res, next) {
+      modelHandler.read.all(req, (err, items) => {
         if (err) {
           return errorHandler(next, err);
         }
 
-        res.status(200).json(items);
+        return res.status(HTTPStatus.OK).json(items);
       });
     },
 
-    readOne: function (req, res, next) {
-      modelHandler.read.one(req, function(err, item) {
+    readOne(req, res, next) {
+      modelHandler.read.one(req, (err, item) => {
         if (err) {
           return errorHandler(next, err);
         }
 
         if (!item) {
-          return res.sendStatus(404);
+          return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        res.status(200).json(item);
+        return res.status(HTTPStatus.OK).json(item);
       });
     },
 
-    update: function (req, res, next) {
-      modelHandler.update(req, function(err, item) {
+    update(req, res, next) {
+      modelHandler.update(req, (err, item) => {
         if (err) {
           return errorHandler(next, err);
         }
 
         if (!item) {
-          return res.sendStatus(404);
+          return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        res.sendStatus(200);
+        return res.sendStatus(HTTPStatus.OK);
       });
     },
 
-    delete: function (req, res, next) {
-      modelHandler.delete(req, function(err, item) {
+    delete(req, res, next) {
+      modelHandler.delete(req, (err, item) => {
         if (err) {
           return errorHandler(next, err);
         }
 
         if (!item) {
-          return res.sendStatus(404);
+          return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        res.sendStatus(204);
+        return res.sendStatus(HTTPStatus.NO_CONTENT);
       });
     }
   };
-}
+};

@@ -1,7 +1,7 @@
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = function (router) {
-  var routeName;
+  let routeName;
 
   fs.readdirSync(__dirname).forEach(function(fileName) {
     if (fileName === 'index.js') {
@@ -11,4 +11,4 @@ module.exports = function (router) {
     routeName = fileName.substr(0, fileName.indexOf('.'));
     require('./' + routeName)(router);
   });
-}
+};

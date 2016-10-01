@@ -1,10 +1,10 @@
-var programme = require('../controller/programme');
-var multer  = require('multer');
-var storage = multer.memoryStorage();
-var upload = multer({ storage: storage });
+const multer = require('multer');
+const programme = require('../controller/programme');
 
-module.exports = function (router) {
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
+module.exports = (router) => {
   router
     .post('/programmes', programme.create)
     .post('/programmes/import', upload.single('programme'), programme.import)
@@ -13,5 +13,4 @@ module.exports = function (router) {
     .put('/programmes/:id', programme.update)
     .delete('/programmes/:id', programme.delete)
     .delete('/programmes', programme.delete);
-
-}
+};

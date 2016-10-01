@@ -1,22 +1,20 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
-module.exports = function (model, options) {
-  'use strict';
-
+module.exports = (model, options) => {
   return {
-    create: function (args, callback) {
-      var doc = args.body;
+    create: (args, callback) => {
+      const doc = args.body;
 
       model.create(doc)
-        .then(function(item) {
+        .then((item) => {
           callback(null, item);
         }, callback);
     },
 
     read: {
-      all: function (args, callback) {
-        var options = {},
-          param;
+      all: (args, callback) => {
+        const options = {};
+        let param = {};
 
         options.find = {};
 
@@ -41,29 +39,29 @@ module.exports = function (model, options) {
         options.skip = args.query.skip;
 
         model.readAll(options)
-          .then(function (items) {
+          .then((items) => {
             callback(null, items);
           }, callback);
-        },
+      },
 
-        one: function (args, callback) {
-          var options = {};
+      one: (args, callback) => {
+        let options = {};
 
-          options.query = {_id: args.params.id};
-          options.select = (args.query.select || '').replace(',', ' ');
-          options.populate = (args.query.populate || '').replace(',', ' ');
+        options.query = { _id: args.params.id };
+        options.select = (args.query.select || '').replace(',', ' ');
+        options.populate = (args.query.populate || '').replace(',', ' ');
 
-          model.readOne(options)
-            .then(function(item) {
-              callback(null, item);
-            }, callback);
-        }
+        model.readOne(options)
+          .then((item) => {
+            callback(null, item);
+          }, callback);
+      }
     },
 
-    update: function (args, callback) {
-      var conditions = {};
+    update: (args, callback) => {
+      const conditions = {};
 
-      conditions.query = {_id: args.params.id};
+      conditions.query = { _id: args.params.id };
       conditions.data = args.body;
 
       if (options && options.restrictTo) {
@@ -71,18 +69,18 @@ module.exports = function (model, options) {
       }
 
       model.update(conditions)
-        .then(function(item) {
+        .then((item) => {
           callback(null, item);
         }, callback);
     },
 
-    delete: function (args, callback) {
-      var options = {};
+    delete: (args, callback) => {
+      const options = {};
 
       options.query = args.params.id ? { _id: args.params.id } : {};
 
       model.delete(options)
-        .then(function (item, result) {
+        .then((item) => {
           callback(null, item);
         }, callback);
     }

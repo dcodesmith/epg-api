@@ -1,11 +1,9 @@
-'use strict';
+const mongoose = require('mongoose');
+const createdModified = require('./plugins/createdModified');
+const crud = require('./plugins/crud');
 
-var mongoose = require('mongoose');
-var createdModified = require('./plugins/createdModified');
-var crud = require('./plugins/crud');
-
-var Schema = mongoose.Schema;
-var Channel = new Schema({
+const Schema = mongoose.Schema;
+const Channel = new Schema({
   name: {
     type: String,
     required: true
@@ -16,7 +14,7 @@ var Channel = new Schema({
   },
   type: String,
   description: String
-}, {timestamps: true});
+}, { timestamps: true });
 
 // .virtual, .post, .static, .pre
 mongoose.Promise = Promise;
@@ -24,8 +22,7 @@ mongoose.Promise = Promise;
 Channel.plugin(createdModified);
 Channel.plugin(crud);
 
-Channel.virtual('logoPath').get(function() {
-  return '/images/' + this.code + '.svg?' + this.createdAt.valueOf();
-});
+// Channel.virtual('logoPath').get(() =>
+// { return `/images/${this.code}.svg?${this.createdAt.valueOf()}` });
 
 module.exports = mongoose.model('Channel', Channel);
