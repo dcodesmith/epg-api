@@ -1,6 +1,6 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
-module.exports = (model, options) => {
+export default function handler(model, options) {
   return {
     create: (args, callback) => {
       const doc = args.body;
@@ -86,4 +86,4 @@ module.exports = (model, options) => {
     }
 
   };
-};
+}

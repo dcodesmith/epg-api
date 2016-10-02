@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-const createdModified = require('./plugins/createdModified');
-const crud = require('./plugins/crud');
-const moment = require('moment-timezone');
+import mongoose from 'mongoose';
+import createdModified from './plugins/createdModified';
+import crud from './plugins/crud';
+// import moment from 'moment-timezone';
 
 const Schema = mongoose.Schema;
-const Programme = new Schema({
+const ProgrammeSchema = new Schema({
   channel: {
     type: Schema.Types.ObjectId,
     ref: 'Channel',
@@ -44,16 +44,16 @@ const Programme = new Schema({
 
 mongoose.Promise = Promise;
 
-Programme.plugin(createdModified);
-Programme.plugin(crud);
+ProgrammeSchema.plugin(createdModified);
+ProgrammeSchema.plugin(crud);
 
 // TODO: Need to fix this
-Programme.virtual('startTimeISO').get(function startTimeISOVirtual() {
-  // return moment.tz(this.date + ' ' + this.startTime, 'Europe/London').format();
-});
+// ProgrammeSchema.virtual('startTimeISO').get(function startTimeISOVirtual() {
+//   // return moment.tz(this.date + ' ' + this.startTime, 'Europe/London').format();
+// });
 
-Programme.virtual('endTimeISO').get(function endTimeISOVirtual() {
-  // return moment.tz(this.date + ' ' + this.endTime, 'Europe/London').format();
-});
+// ProgrammeSchema.virtual('endTimeISO').get(function endTimeISOVirtual() {
+//   // return moment.tz(this.date + ' ' + this.endTime, 'Europe/London').format();
+// });
 
-module.exports = mongoose.model('Programme', Programme);
+export default mongoose.model('Programme', ProgrammeSchema);

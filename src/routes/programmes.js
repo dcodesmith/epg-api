@@ -1,16 +1,18 @@
-const multer = require('multer');
-const programme = require('../controller/programme');
+import express from 'express';
+import multer from 'multer';
+import programme from '../controller/programme';
 
+const router = express.Router(); // eslint-disable-line new-cap
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-module.exports = (router) => {
-  router
-    .post('/programmes', programme.create)
-    .post('/programmes/import', upload.single('programme'), programme.import)
-    .get('/programmes', programme.readAll)
-    .get('/programmes/:id', programme.readOne)
-    .put('/programmes/:id', programme.update)
-    .delete('/programmes/:id', programme.delete)
-    .delete('/programmes', programme.delete);
-};
+router
+  .post('/', programme.create)
+  .post('/import', upload.single('programme'), programme.import)
+  .get('/', programme.readAll)
+  .get('/:id', programme.readOne)
+  .put('/:id', programme.update)
+  .delete('/:id', programme.delete)
+  .delete('/', programme.delete);
+
+export default router;

@@ -3,4 +3,5 @@ test.csv
 *.txt
 
 coverage
+dist
 node_modules

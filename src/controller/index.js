@@ -1,5 +1,5 @@
-const HTTPStatus = require('http-status');
-const handler = require('./../../util/handler');
+import HTTPStatus from 'http-status';
+import handler from './../../util/handler';
 // const validators = require('./validators');
 
 function errorHandler(next, err) {
@@ -9,11 +9,12 @@ function errorHandler(next, err) {
   next(err);
 }
 
-module.exports = (model) => {
+export default function createController(model, extra) {
   const modelHandler = handler(model);
   // const validator = validators(model.modelName.toLowerCase());
 
-  return {
+  /* eslint-disable consistent-return */
+  return Object.assign({}, {
     create(req, res, next) {
       // TODO: Add error message. And read them in the tests
       // let temp;
@@ -35,7 +36,7 @@ module.exports = (model) => {
           return errorHandler(next, err);
         }
 
-        return res.status(HTTPStatus.CREATED).json(item);
+        res.status(HTTPStatus.CREATED).json(item);
       });
     },
 
@@ -45,7 +46,7 @@ module.exports = (model) => {
           return errorHandler(next, err);
         }
 
-        return res.status(HTTPStatus.OK).json(items);
+        res.status(HTTPStatus.OK).json(items);
       });
     },
 
@@ -59,7 +60,7 @@ module.exports = (model) => {
           return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        return res.status(HTTPStatus.OK).json(item);
+        res.status(HTTPStatus.OK).json(item);
       });
     },
 
@@ -73,7 +74,7 @@ module.exports = (model) => {
           return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        return res.sendStatus(HTTPStatus.OK);
+        res.sendStatus(HTTPStatus.OK);
       });
     },
 
@@ -87,8 +88,8 @@ module.exports = (model) => {
           return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        return res.sendStatus(HTTPStatus.NO_CONTENT);
+        res.sendStatus(HTTPStatus.NO_CONTENT);
       });
     }
-  };
-};
+  }, extra);
+}

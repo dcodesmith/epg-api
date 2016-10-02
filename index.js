@@ -1,4 +1,4 @@
-const server = require('./src/server');
+import server from './src/server';
 
 const port = process.env.PORT || 8080;
 const environment = process.env.NODE_ENV || 'development';

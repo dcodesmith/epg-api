@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const winston = require('winston');
+import mongoose from 'mongoose';
+import winston from 'winston';
 
 const username = process.env.DATABASEUSER;
 const password = process.env.DATABASEPASSWORD;
@@ -52,20 +52,20 @@ const connectWithRetry = (hostString, options) => {
   });
 };
 
-module.exports = {
-  connect() {
-    const hostString = getReplicaHostString();
-    const options = {
-      server: {
-        auto_reconnect: true
-      }
-    };
-    connectWithRetry(hostString, options);
-  },
-  disconnect(next) {
-    return mongoose.disconnect(next);
-  },
-  status() {
-    return STATES[mongoose.connection.readyState];
-  }
+const connect = () => {
+  const hostString = getReplicaHostString();
+  const options = {
+    server: {
+      auto_reconnect: true
+    }
+  };
+  connectWithRetry(hostString, options);
 };
+
+const disconnect = (next) => { mongoose.disconnect(next); };
+
+const status = () => {
+  return STATES[mongoose.connection.readyState];
+};
+
+export { connect, disconnect, status };

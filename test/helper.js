@@ -1,39 +1,41 @@
-var request = require('supertest')(require('../src/server'));
-var chai = require('chai');
-var expect = chai.expect;
+import supertest from 'supertest';
+import { expect } from 'chai';
+import app from '../src/server';
+
+const request = supertest(app);
 
 function assertRequest(baseUrl) {
-  return function(options, done) {
-    var url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
+  return function (options, done) {
+    const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
 
     request[options.method || 'post'](url)
       .send(options.data || {})
       .expect(options.statusCode)
-      .end(function(err, res){
+      .end((err) => {
         if (err) {
           return done(err);
         }
-        done();
+        return done();
       });
-  }
-};
+  };
+}
 
 function promisifyRequest(baseUrl) {
-  return function(options) {
-    return new Promise(function(resolve, reject) {
-      var url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
+  return function (options) {
+    return new Promise((resolve, reject) => {
+      const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
 
       request[options.method || 'post'](url)
         .send(options.data || {})
         .query(options.query || {})
-        .end(function(err, res){
+        .end((err, res) => {
           if (err) {
             return reject(err);
           }
           return resolve(res);
         });
     });
-  }
+  };
 }
 
 function assert(actual, expected) {
@@ -41,16 +43,14 @@ function assert(actual, expected) {
     _assert(actual, expected);
   } else {
     expect(expected.length).to.equal(actual.length);
-    for (var i = 0; i < expected.length; i++) {
+    for (let i = 0; i < expected.length; i += 1) {
       _assert(actual[i], expected[i]);
     }
-}
-
-
+  }
 }
 
 function _assert(actual, expected) {
-  for (var key in expected) {
+  for (let key in expected) {
     if (key === 'channel') {
       // console.log('channel', typeof actual[key], typeof expected[key]);
       expected[key] = String(expected[key]);
@@ -59,8 +59,4 @@ function _assert(actual, expected) {
   }
 }
 
-module.exports = {
-  assertRequest: assertRequest,
-  promisifyRequest: promisifyRequest,
-  assert: assert
-};
+export { assertRequest, promisifyRequest, assert };

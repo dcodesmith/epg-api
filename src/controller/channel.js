@@ -1,4 +1,4 @@
-const Channel = require('../model/Channel');
-const index = require('./index')(Channel);
+import Channel from '../model/Channel';
+import createController from './index';
 
-Object.assign(exports, index);
+export default createController(Channel);

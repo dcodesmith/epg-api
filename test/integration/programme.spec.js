@@ -1,19 +1,19 @@
-const chai = require('chai');
-const _ = require('lodash');
-const mongoose = require('mongoose');
-const HTTPStatus = require('http-status');
-
-const expect = chai.expect;
-const Programme = require('../../src/model/Programme');
-const helper = require('../helper');
-const Channel = require('../../src/model/Channel');
-const channelMockData = _.cloneDeep(require('../fixtures/channels'));
-const programmeMockData = require('../fixtures/programmes');
-const request = require('supertest')(require('../../src/server'));
+import { expect } from 'chai';
+import { cloneDeep } from 'lodash';
+import supertest from 'supertest';
+import mongoose from 'mongoose';
+import HTTPStatus from 'http-status';
+import Programme from '../../src/model/Programme';
+import * as helper from '../helper';
+import Channel from '../../src/model/Channel';
+import channelData from '../fixtures/channels';
+import programmeMockData from '../fixtures/programmes';
+import app from '../../src/server';
 
 const baseUrl = '/api/programmes';
-const assertRequest = helper.assertRequest(baseUrl);
-const pRequest = helper.promisifyRequest(baseUrl);
+const assertRequest = helper.assertRequest(baseUrl); // eslint-disable-line no-redeclare
+const request = helper.promisifyRequest(baseUrl);
+const channelMockData = cloneDeep(channelData);
 const clonedMockData = programmeMockData.map((data) => {
   const clonedData = data;
 
@@ -41,7 +41,7 @@ describe(`${baseUrl}`, () => {
       });
 
       it('should create one programme, return a 201 response & have no errors', (done) => {
-        request.post(`${baseUrl}/import`)
+        supertest(app).post(`${baseUrl}/import`)
           .attach('programme', './test/fixtures/valid.csv')
           .expect(HTTPStatus.CREATED)
           .end((err) => {
@@ -63,7 +63,7 @@ describe(`${baseUrl}`, () => {
       });
 
       it('should NOT create a programme, return a 400 response with errors', (done) => {
-        request.post(`${baseUrl}/import`)
+        supertest(app).post(`${baseUrl}/import`)
           .attach('programme', './test/fixtures/invalid.csv')
           .expect(HTTPStatus.BAD_REQUEST)
           .end((err) => {
@@ -85,7 +85,7 @@ describe(`${baseUrl}`, () => {
       });
 
       it('should NOT create a programme, return a 404 response with errors', (done) => {
-        request.post(`${baseUrl}/import`)
+        supertest(app).post(`${baseUrl}/import`)
           .expect(HTTPStatus.BAD_REQUEST)
           .end((err) => {
             if (err) {
@@ -103,7 +103,7 @@ describe(`${baseUrl}`, () => {
     });
 
     it('should create one channel, return a 201 response & have no errors', (done) => {
-      const programme = _.cloneDeep(programmeMockData[0]);
+      const programme = cloneDeep(programmeMockData[0]);
       let options = {};
       programme.channel = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
       options = { data: programme, statusCode: HTTPStatus.CREATED };
@@ -115,7 +115,7 @@ describe(`${baseUrl}`, () => {
       let invalidProgramme = {};
 
       beforeEach(() => {
-        invalidProgramme = _.cloneDeep(clonedMockData[4]);
+        invalidProgramme = cloneDeep(clonedMockData[4]);
         invalidProgramme.channel = '';
       });
 
@@ -140,7 +140,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get' }).then((res) => {
+          request({ method: 'get' }).then((res) => {
             response = res;
             done();
           });
@@ -172,7 +172,7 @@ describe(`${baseUrl}`, () => {
           let response;
 
           before((done) => {
-            pRequest({ method: 'get', query: { find: query } }).then((res) => {
+            request({ method: 'get', query: { find: query } }).then((res) => {
               response = res;
               done();
             });
@@ -200,7 +200,7 @@ describe(`${baseUrl}`, () => {
           let response;
 
           before((done) => {
-            pRequest({ method: 'get', query: { find: query } }).then((res) => {
+            request({ method: 'get', query: { find: query } }).then((res) => {
               response = res;
               done();
             });
@@ -226,7 +226,7 @@ describe(`${baseUrl}`, () => {
 
           before((done) => {
             // TODO: Do more
-            pRequest({ method: 'get', query: 'sort=-' }).then((res) => {
+            request({ method: 'get', query: 'sort=-' }).then((res) => {
               response = res;
               done();
             });
@@ -243,7 +243,7 @@ describe(`${baseUrl}`, () => {
 
     describe('Given there is a programmes', () => {
       const programmeId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const programme = _.cloneDeep(clonedMockData[1]);
+      const programme = cloneDeep(clonedMockData[1]);
       programme.channel = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
       programme._id = programmeId;
 
@@ -259,7 +259,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get', path: programmeId }).then((res) => {
+          request({ method: 'get', path: programmeId }).then((res) => {
             response = res;
             done();
           });
@@ -286,7 +286,7 @@ describe(`${baseUrl}`, () => {
           let response = {};
 
           before((done) => {
-            pRequest({ method: 'get', path: invalidId }).then((res) => {
+            request({ method: 'get', path: invalidId }).then((res) => {
               response = res;
               done();
             });
@@ -314,7 +314,7 @@ describe(`${baseUrl}`, () => {
         let response = {};
 
         before((done) => {
-          pRequest({ method: 'get' }).then((res) => {
+          request({ method: 'get' }).then((res) => {
             response = res;
             done();
           });
@@ -341,7 +341,7 @@ describe(`${baseUrl}`, () => {
         let response = {};
 
         before((done) => {
-          pRequest({ method: 'get', path: nonExistentChannelId }).then((res) => {
+          request({ method: 'get', path: nonExistentChannelId }).then((res) => {
             response = res;
             done();
           });
@@ -357,7 +357,7 @@ describe(`${baseUrl}`, () => {
   context('UPDATE', () => {
     describe('Given there is a programme', () => {
       const programmeId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const programme = _.cloneDeep(clonedMockData[2]);
+      const programme = cloneDeep(clonedMockData[2]);
       programme._id = programmeId;
       programme.channel = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
 
@@ -373,7 +373,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: programmeId, data: { show: 'A new show' } }).then((res) => {
+          request({ method: 'put', path: programmeId, data: { show: 'A new show' } }).then((res) => {
             response = res;
             done();
           });
@@ -393,7 +393,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: programmeId, data: { show: {} } }).then((res) => {
+          request({ method: 'put', path: programmeId, data: { show: {} } }).then((res) => {
             response = res;
             done();
           });
@@ -416,7 +416,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: nonExistentProgrammeIdId }).then((res) => {
+          request({ method: 'put', path: nonExistentProgrammeIdId }).then((res) => {
             response = res;
             done();
           });
@@ -432,7 +432,7 @@ describe(`${baseUrl}`, () => {
   context('DELETE', () => {
     describe('Given there is a programme', () => {
       const programmeId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const programme = _.cloneDeep(clonedMockData[0]);
+      const programme = cloneDeep(clonedMockData[0]);
       programme._id = programmeId;
       programme.channel = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
 
@@ -448,7 +448,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'del', path: programmeId }).then((res) => {
+          request({ method: 'del', path: programmeId }).then((res) => {
             response = res;
             done();
           });
@@ -467,7 +467,7 @@ describe(`${baseUrl}`, () => {
         let response = {};
 
         before((done) => {
-          pRequest({ method: 'del', path: 'channelId' }).then((res) => {
+          request({ method: 'del', path: 'channelId' }).then((res) => {
             response = res;
             done();
           });
@@ -490,7 +490,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'del', path: nonExistentProgrammeId }).then((res) => {
+          request({ method: 'del', path: nonExistentProgrammeId }).then((res) => {
             response = res;
             done();
           });

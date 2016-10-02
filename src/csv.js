@@ -1,11 +1,11 @@
-const csv = require('fast-csv');
-const Channel = require('./model/Channel');
-const Programme = require('./model/Programme');
+import csv from 'fast-csv';
+import Channel from './model/Channel';
+import Programme from './model/Programme';
 
 const validRows = [];
 const invalidRows = [];
 
-function parse(csvData) {
+export default function (csvData) {
   const options = {
     trim: true,
     headers: true
@@ -76,4 +76,4 @@ function parse(csvData) {
   });
 }
 
-module.exports = { parse };
+// module.exports = { parse };

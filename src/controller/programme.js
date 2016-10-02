@@ -1,8 +1,8 @@
-const Programme = require('../model/Programme');
-const csv = require('../csv');
-const stream = require('stream');
-const index = require('./index')(Programme);
-const HTTPStatus = require('http-status');
+import stream from 'stream';
+import HTTPStatus from 'http-status';
+import csv from '../csv';
+import Programme from '../model/Programme';
+import createController from './index';
 
 const errorHandler = (next, err) => {
   if (err) {
@@ -13,11 +13,11 @@ const errorHandler = (next, err) => {
   }
 };
 
-exports.import = (req, res, next) => {
+const imports = (req, res, next) => {
   const bufferStream = new stream.PassThrough();
 
   if (!req.file) {
-    return res.status(400).json({
+    return res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'no csv file found'
     });
   }
@@ -37,4 +37,4 @@ exports.import = (req, res, next) => {
     });
 };
 
-Object.assign(exports, index);
+export default createController(Programme, { import: imports });

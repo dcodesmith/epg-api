@@ -1,14 +1,14 @@
-const fs = require('fs');
+import express from 'express';
+import channelRoutes from './channels';
+import programmeRoutes from './programmes';
 
-module.exports = function (router) {
-  let routeName;
+const router = express.Router(); // eslint-disable-line new-cap
 
-  fs.readdirSync(__dirname).forEach(function(fileName) {
-    if (fileName === 'index.js') {
-      return;
-    }
+router.use('/channels', channelRoutes);
+router.use('/programmes', programmeRoutes);
+router.use((req, res, next) => {
+  console.log('%s %s %s', req.method, req.url, req.path);
+  next();
+});
 
-    routeName = fileName.substr(0, fileName.indexOf('.'));
-    require('./' + routeName)(router);
-  });
-};
+export default router;

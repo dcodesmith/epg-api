@@ -1,6 +1,6 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
-module.exports = (schema) => {
+export default (schema) => {
   // schema.static('createOne', function(options, cb) {
   //   (new this(options.data)).save(cb);
   // });

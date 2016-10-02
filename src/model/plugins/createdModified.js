@@ -1,4 +1,4 @@
-function createdModified(schema) {
+export default function createdModified(schema) {
   schema.virtual('updatedAtISO').get(function createdModifiedVirtualupdatedAtISO() {
     return new Date(this.updatedAt).toISOString();
   });
@@ -19,5 +19,3 @@ function createdModified(schema) {
     return ret;
   };
 }
-
-module.exports = createdModified;

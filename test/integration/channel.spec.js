@@ -1,13 +1,13 @@
-const chai = require('chai');
-const _ = require('lodash');
-const Channel = require('../../src/model/Channel');
-const mockData = require('../fixtures/channels');
-const mongoose = require('mongoose');
-const helper = require('../helper');
+import { expect } from 'chai';
+import mongoose from 'mongoose';
+import HTTPStatus from 'http-status';
+import _, { cloneDeep } from 'lodash';
+import Channel from '../../src/model/Channel';
+import { promisifyRequest, assert } from '../helper';
+import mockData from '../fixtures/channels';
 
-const expect = chai.expect;
 const baseUrl = '/api/channels';
-const pRequest = helper.promisifyRequest(baseUrl);
+const request = promisifyRequest(baseUrl);
 
 describe(`${baseUrl}`, () => {
   after((done) => {
@@ -25,18 +25,18 @@ describe(`${baseUrl}`, () => {
         let response = {};
 
         before((done) => {
-          pRequest({ data: channel }).then((res) => {
+          request({ data: channel }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('should create one channel', () => {
-          helper.assert(response.body, channel);
+          assert(response.body, channel);
         });
 
         it('should have a 201 status code', () => {
-          expect(response.statusCode).to.equal(201);
+          expect(response.statusCode).to.equal(HTTPStatus.CREATED);
         });
 
         it('should have no errors', () => {
@@ -49,18 +49,18 @@ describe(`${baseUrl}`, () => {
         let response = {};
 
         before((done) => {
-          pRequest({ data: channels }).then((res) => {
+          request({ data: channels }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('should create 4 channels', () => {
-          helper.assert(response.body, channels);
+          assert(response.body, channels);
         });
 
         it('should have a 201 status code', () => {
-          expect(response.statusCode).to.equal(201);
+          expect(response.statusCode).to.equal(HTTPStatus.CREATED);
         });
 
         it('should have no errors', () => {
@@ -73,7 +73,7 @@ describe(`${baseUrl}`, () => {
           let response = {};
 
           before((done) => {
-            pRequest({}).then((res) => {
+            request({}).then((res) => {
               response = res;
               done();
             });
@@ -84,7 +84,7 @@ describe(`${baseUrl}`, () => {
           });
 
           it('400', () => {
-            expect(response.statusCode).to.equal(400);
+            expect(response.statusCode).to.equal(HTTPStatus.BAD_REQUEST);
           });
         });
       });
@@ -93,7 +93,7 @@ describe(`${baseUrl}`, () => {
 
   context('GET', () => {
     describe('Given there are 4 Channels', () => {
-      const clonedMockData = _.cloneDeep(mockData);
+      const clonedMockData = cloneDeep(mockData);
 
       before((done) => {
         Channel.create(clonedMockData, done);
@@ -107,18 +107,18 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get' }).then((res) => {
+          request({ method: 'get' }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('should return 4 channels', () => {
-          helper.assert(response.body, clonedMockData);
+          assert(response.body, clonedMockData);
         });
 
         it('should have a 200 status code', () => {
-          expect(response.statusCode).to.equal(200);
+          expect(response.statusCode).to.equal(HTTPStatus.OK);
         });
 
         it('should have no errors', () => {
@@ -134,18 +134,18 @@ describe(`${baseUrl}`, () => {
           let response;
 
           before((done) => {
-            pRequest({ method: 'get', query: { find: query } }).then((res) => {
+            request({ method: 'get', query: { find: query } }).then((res) => {
               response = res;
               done();
             });
           });
 
           it('should return 1 channel', () => {
-            helper.assert(response.body, [expected]);
+            assert(response.body, [expected]);
           });
 
           it('should have a 200 status code', () => {
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(HTTPStatus.OK);
           });
 
           it('should have no errors', () => {
@@ -162,18 +162,18 @@ describe(`${baseUrl}`, () => {
           let response;
 
           before((done) => {
-            pRequest({ method: 'get', query: { find: query } }).then((res) => {
+            request({ method: 'get', query: { find: query } }).then((res) => {
               response = res;
               done();
             });
           });
 
           it('should return 1 channel', () => {
-            helper.assert(response.body, [expected]);
+            assert(response.body, [expected]);
           });
 
           it('should have a 200 status code', () => {
-            expect(response.statusCode).to.equal(200);
+            expect(response.statusCode).to.equal(HTTPStatus.OK);
           });
 
           it('should have no errors', () => {
@@ -188,7 +188,7 @@ describe(`${baseUrl}`, () => {
 
           before((done) => {
             // TODO: Do more
-            pRequest({ method: 'get', query: 'sort=-' }).then((res) => {
+            request({ method: 'get', query: 'sort=-' }).then((res) => {
               response = res;
               done();
             });
@@ -197,7 +197,7 @@ describe(`${baseUrl}`, () => {
           it('should have error messages matching the invalid fields', () => {});
 
           it('400', () => {
-            expect(response.statusCode).to.equal(400);
+            expect(response.statusCode).to.equal(HTTPStatus.BAD_REQUEST);
           });
         });
       });
@@ -205,7 +205,7 @@ describe(`${baseUrl}`, () => {
 
     describe('Given there is a channel', () => {
       const channelId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const channel = _.cloneDeep(mockData[1]);
+      const channel = cloneDeep(mockData[1]);
       channel._id = channelId;
 
       before((done) => {
@@ -220,7 +220,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get', path: channelId }).then((res) => {
+          request({ method: 'get', path: channelId }).then((res) => {
             response = res;
             done();
           });
@@ -230,11 +230,11 @@ describe(`${baseUrl}`, () => {
           channel.id = channel._id.toString();
           delete channel._id;
 
-          helper.assert(response.body, channel);
+          assert(response.body, channel);
         });
 
         it('should have a 200 status code', () => {
-          expect(response.statusCode).to.equal(200);
+          expect(response.statusCode).to.equal(HTTPStatus.OK);
         });
 
         it('should have no errors', () => {
@@ -249,7 +249,7 @@ describe(`${baseUrl}`, () => {
           let response;
 
           before((done) => {
-            pRequest({ method: 'get', path: invalidId }).then((res) => {
+            request({ method: 'get', path: invalidId }).then((res) => {
               response = res;
               done();
             });
@@ -258,7 +258,7 @@ describe(`${baseUrl}`, () => {
           it('should have error messages matching the invalid fields', () => {});
 
           it('400', () => {
-            expect(response.statusCode).to.equal(400);
+            expect(response.statusCode).to.equal(HTTPStatus.BAD_REQUEST);
           });
         });
       });
@@ -277,7 +277,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get' }).then((res) => {
+          request({ method: 'get' }).then((res) => {
             response = res;
             done();
           });
@@ -288,7 +288,7 @@ describe(`${baseUrl}`, () => {
         });
 
         it('200', () => {
-          expect(response.statusCode).to.equal(200);
+          expect(response.statusCode).to.equal(HTTPStatus.OK);
         });
       });
     });
@@ -302,14 +302,14 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'get', path: nonExistentChannelId }).then((res) => {
+          request({ method: 'get', path: nonExistentChannelId }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('404', () => {
-          expect(response.statusCode).to.equal(404);
+          expect(response.statusCode).to.equal(HTTPStatus.NOT_FOUND);
         });
       });
     });
@@ -318,7 +318,7 @@ describe(`${baseUrl}`, () => {
   context('UPDATE', () => {
     describe('Given there is a channel', () => {
       const channelId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const channel = _.cloneDeep(mockData[2]);
+      const channel = cloneDeep(mockData[2]);
       channel._id = channelId;
 
       before((done) => {
@@ -333,7 +333,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: channelId, data: { show: 'A new show' } }).then((res) => {
+          request({ method: 'put', path: channelId, data: { show: 'A new show' } }).then((res) => {
             response = res;
             done();
           });
@@ -345,7 +345,7 @@ describe(`${baseUrl}`, () => {
         });
 
         it('200', () => {
-          expect(response.statusCode).to.equal(200);
+          expect(response.statusCode).to.equal(HTTPStatus.OK);
         });
       });
 
@@ -353,7 +353,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: channelId, data: { name: {} } }).then((res) => {
+          request({ method: 'put', path: channelId, data: { name: {} } }).then((res) => {
             response = res;
             done();
           });
@@ -364,7 +364,7 @@ describe(`${baseUrl}`, () => {
         });
 
         it('400', () => {
-          expect(response.statusCode).to.equal(400);
+          expect(response.statusCode).to.equal(HTTPStatus.BAD_REQUEST);
         });
       });
     });
@@ -376,14 +376,14 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'put', path: nonExistentChannelId }).then((res) => {
+          request({ method: 'put', path: nonExistentChannelId }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('404', () => {
-          expect(response.statusCode).to.equal(404);
+          expect(response.statusCode).to.equal(HTTPStatus.NOT_FOUND);
         });
       });
     });
@@ -392,7 +392,7 @@ describe(`${baseUrl}`, () => {
   context('DELETE', () => {
     describe('Given there is a channel', () => {
       const channelId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
-      const channel = _.cloneDeep(mockData[0]);
+      const channel = cloneDeep(mockData[0]);
       channel._id = channelId;
 
       before((done) => {
@@ -407,7 +407,7 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'del', path: channelId }).then((res) => {
+          request({ method: 'del', path: channelId }).then((res) => {
             response = res;
             done();
           });
@@ -418,7 +418,7 @@ describe(`${baseUrl}`, () => {
         });
 
         it('204', () => {
-          expect(response.statusCode).to.equal(204);
+          expect(response.statusCode).to.equal(HTTPStatus.NO_CONTENT);
         });
       });
 
@@ -427,9 +427,9 @@ describe(`${baseUrl}`, () => {
         // let invalidChannel;
 
         before((done) => {
-          // invalidChannel = _.cloneDeep(mockData[0]);
+          // invalidChannel = cloneDeep(mockData[0]);
           // invalidChannel.code = '';
-          pRequest({ method: 'del', path: 'channelId' }).then((res) => {
+          request({ method: 'del', path: 'channelId' }).then((res) => {
             response = res;
             done();
           });
@@ -452,14 +452,14 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          pRequest({ method: 'del', path: nonExistentChannelId }).then((res) => {
+          request({ method: 'del', path: nonExistentChannelId }).then((res) => {
             response = res;
             done();
           });
         });
 
         it('204', () => {
-          expect(response.statusCode).to.equal(204);
+          expect(response.statusCode).to.equal(HTTPStatus.NO_CONTENT);
         });
       });
     });

@@ -1,9 +1,8 @@
-const mongoose = require('mongoose');
-const createdModified = require('./plugins/createdModified');
-const crud = require('./plugins/crud');
+import mongoose from 'mongoose';
+import createdModified from './plugins/createdModified';
+import crud from './plugins/crud';
 
-const Schema = mongoose.Schema;
-const Channel = new Schema({
+const ChannelSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -19,10 +18,10 @@ const Channel = new Schema({
 // .virtual, .post, .static, .pre
 mongoose.Promise = Promise;
 
-Channel.plugin(createdModified);
-Channel.plugin(crud);
+ChannelSchema.plugin(createdModified);
+ChannelSchema.plugin(crud);
 
 // Channel.virtual('logoPath').get(() =>
 // { return `/images/${this.code}.svg?${this.createdAt.valueOf()}` });
 
-module.exports = mongoose.model('Channel', Channel);
+export default mongoose.model('Channel', ChannelSchema);
