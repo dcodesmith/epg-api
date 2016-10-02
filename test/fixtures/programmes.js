@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     channelCode: 'fv56lj0',
     show: 'News',
