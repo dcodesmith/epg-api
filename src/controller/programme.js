@@ -17,17 +17,17 @@ const imports = (req, res, next) => {
   const bufferStream = new stream.PassThrough();
 
   if (!req.file) {
-    return res.status(HTTPStatus.BAD_REQUEST).json({
+    res.status(HTTPStatus.BAD_REQUEST).json({
       message: 'no csv file found'
     });
+    return;
   }
 
   bufferStream.end(req.file.buffer);
 
   csv.parse(bufferStream)
-    .then((result) => {
-      return Programme.create(result);
-    }, (error) => {
+    .then((result) => { Programme.create(result); },
+    (error) => {
       res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
     })
     .then((programmes) => {
