@@ -13,8 +13,7 @@ export default function handler(model, options) {
 
     read: {
       all: (args, callback) => {
-        const options = {};
-        let param = {};
+        const options = {}; // eslint-disable-line no-shadow
 
         options.find = {};
 
@@ -24,7 +23,7 @@ export default function handler(model, options) {
           options.find = args.query.find;
         }
 
-        for (param in args.params) {
+        for (const param in args.params) {
           if (param.indexOf('_') < 0) {
             options.find[param] = args.params[param];
           }
@@ -45,7 +44,7 @@ export default function handler(model, options) {
       },
 
       one: (args, callback) => {
-        let options = {};
+        const options = {}; // eslint-disable-line no-shadow
 
         options.query = { _id: args.params.id };
         options.select = (args.query.select || '').replace(',', ' ');
@@ -75,7 +74,7 @@ export default function handler(model, options) {
     },
 
     delete: (args, callback) => {
-      const options = {};
+      const options = {}; // eslint-disable-line no-shadow
 
       options.query = args.params.id ? { _id: args.params.id } : {};
 

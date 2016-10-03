@@ -65,7 +65,10 @@ const connect = () => {
 const disconnect = (next) => { mongoose.disconnect(next); };
 
 const status = () => {
-  return STATES[mongoose.connection.readyState];
+  const dbStatus = STATES[mongoose.connection.readyState];
+
+  return dbStatus;
 };
+
 
 export { connect, disconnect, status };
