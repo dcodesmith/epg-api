@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import HTTPStatus from 'http-status';
-import _, { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash';
 import Channel from '../../src/model/Channel';
 import { promisifyRequest, assert } from '../helper';
 import mockData from '../fixtures/channels';
