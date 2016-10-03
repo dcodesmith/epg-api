@@ -23,11 +23,11 @@ export default function handler(model, options) {
           options.find = args.query.find;
         }
 
-        for (const param in args.params) {
+        Object.keys(args.params).forEach((param) => {
           if (param.indexOf('_') < 0) {
             options.find[param] = args.params[param];
           }
-        }
+        });
 
         options.calculation = args.query.calculation;
         options.query = args.query.query;
