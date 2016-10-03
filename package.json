@@ -6,7 +6,8 @@
   "scripts": {
     "start": "env $(cat config/.local.env) gulp serve",
     "test": "env $(cat config/.test.env) gulp test",
-    "test:coverage": "scripts/coverage.sh"
+    "test:coverage": "scripts/coverage.sh",
+    "lint": "eslint *.js src/**/*.js test/**/*.js util/**/*.js"
   },
   "author": "Afees Dammy Kolawole",
   "license": "ISC",
