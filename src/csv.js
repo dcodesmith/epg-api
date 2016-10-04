@@ -38,17 +38,12 @@ export default function (csvData) {
     const onEnd = () => {
       let errors = [];
       // errors = processErrors(validationErrors[iter]);
-      errors = invalidRows.map((invalidItem) => {
-          return {
-            row: invalidItem.rowNumber,
-            data: invalidItem.data
-          };
-      });
+      errors = invalidRows.map(row => ({ row: row.rowNumber, data: row.data }));
 
       if (errors.length) {
         return reject(errors);
       }
-      resolve(validRows);
+      return resolve(validRows);
     };
 
     const onTransform = (row, next) => {
@@ -75,5 +70,3 @@ export default function (csvData) {
       .on('end', onEnd);
   });
 }
-
-// module.exports = { parse };

@@ -1,6 +1,6 @@
 import stream from 'stream';
 import HTTPStatus from 'http-status';
-import csv from '../csv';
+import parseCSV from '../csv';
 import Programme from '../model/Programme';
 import createController from './index';
 
@@ -25,9 +25,9 @@ const imports = (req, res, next) => {
 
   bufferStream.end(req.file.buffer);
 
-  csv.parse(bufferStream)
-    .then((result) => { Programme.create(result); },
-    (error) => {
+  parseCSV(bufferStream)
+    .then((result) => { Programme.create(result); }
+    , (error) => {
       res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
     })
     .then((programmes) => {
