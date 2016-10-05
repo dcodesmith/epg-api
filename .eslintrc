@@ -23,7 +23,7 @@
       0
     ],
     "import/no-extraneous-dependencies": [
-      "error",
+      2,
       {
         "devDependencies": true
       }
