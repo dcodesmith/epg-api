@@ -20,7 +20,7 @@
     "http-status": "^0.2.3",
     "lodash": "^4.14.1",
     "moment-timezone": "^0.5.0",
-    "mongoose": "^4.4.10",
+    "mongoose": "^4.6.3",
     "morgan": "^1.7.0",
     "multer": "^1.1.0",
     "validator": "^6.0.0",
