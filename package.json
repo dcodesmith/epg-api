@@ -51,7 +51,7 @@
     "mocha": "^3.0.1",
     "nodemon": "^1.10.0",
     "nyc": "^8.3.0",
-    "remap-istanbul": "^0.6.4",
+    "remap-istanbul": "^0.7.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
     "supertest": "^2.0.0"
