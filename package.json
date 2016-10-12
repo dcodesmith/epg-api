@@ -45,7 +45,7 @@
     "gulp-newer": "^1.2.0",
     "gulp-nodemon": "^2.2.1",
     "gulp-plumber": "^1.1.0",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-sourcemaps": "^2.0.1",
     "gulp-util": "^3.0.7",
     "istanbul": "^0.4.4",
     "mocha": "^3.0.1",
