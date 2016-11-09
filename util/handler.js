@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pick from 'lodash/pick';
 
 export default function handler(model, options) {
   return {
@@ -64,7 +64,7 @@ export default function handler(model, options) {
       conditions.data = args.body;
 
       if (options && options.restrictTo) {
-        conditions.data = _.pick(conditions.data, options.restrictTo);
+        conditions.data = pick(conditions.data, options.restrictTo);
       }
 
       model.update(conditions)

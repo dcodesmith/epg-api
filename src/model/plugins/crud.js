@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import pick from 'lodash/pick';
 
 export default (schema) => {
   // schema.static('createOne', function(options, cb) {
@@ -35,6 +35,6 @@ export default (schema) => {
   });
 
   schema.method('select', function (fields) {
-    return _.pick(this.toJSON(), fields);
+    return pick(this.toJSON(), fields);
   });
 };
