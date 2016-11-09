@@ -26,13 +26,17 @@ const imports = (req, res, next) => {
   bufferStream.end(req.file.buffer);
 
   parseCSV(bufferStream)
-    .then((result) => { Programme.create(result); }
+    .then((result) => { return Programme.create(result); }
     , (error) => {
       res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
     })
     .then((programmes) => {
+      return Programme.find({}).populate('channel');
+    })
+    .then((programmes) => {
       res.status(HTTPStatus.CREATED).json(programmes);
-    }, (err) => {
+    })
+    .catch((err) => {
       errorHandler(next, err);
     });
 };
