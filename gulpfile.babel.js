@@ -4,13 +4,18 @@ import path from 'path';
 import runSequence from 'run-sequence';
 import babelCompiler from 'babel-core/register';
 import gulpLoadPlugins from 'gulp-load-plugins';
+import yargs from 'yargs';
 
+const argv = yargs.argv;
 const plugins = gulpLoadPlugins();
 
 const paths = {
   js: ['./**/*.js', '!dist/**', '!node_modules/**'],
   nonJs: ['./package.json', './.gitignore'],
-  tests: './test/**/*.js',
+  tests: {
+    integration: './test/integration/**/*.js',
+    unit: './test/unit/**/*.js'
+  },
   build: 'dist'
 };
 
@@ -49,8 +54,9 @@ gulp.task('nodemon', ['copy', 'babel'], () =>
 
 gulp.task('test', () => {
   let exitCode = 0;
+  const testType = argv.integration ? 'integration' : 'unit';
 
-  return gulp.src([paths.tests], { read: false })
+  return gulp.src([paths.tests[testType]], { read: false })
     .pipe(plugins.plumber())
     .pipe(plugins.mocha({
       reporter: 'spec',
