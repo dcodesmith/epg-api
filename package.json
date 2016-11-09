@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "env $(cat config/.local.env) gulp serve",
-    "test": "env $(cat config/.test.env) gulp test",
+    "test:unit": "gulp test",
+    "test:integration": "env $(cat config/.test.env) gulp test --integration",
+    "test": "npm run test:integration",
     "test:coverage": "scripts/coverage.sh",
     "lint": "eslint *.js src/**/*.js test/**/*.js util/**/*.js"
   },
@@ -15,9 +17,11 @@
     "body-parser": "^1.15.2",
     "cors": "^2.7.1",
     "express": "^4.13.3",
+    "express-validation": "^1.0.1",
     "express-validator": "^2.20.3",
     "fast-csv": "^2.3.0",
     "http-status": "^0.2.3",
+    "joi": "^9.2.0",
     "lodash": "^4.14.1",
     "moment-timezone": "^0.5.0",
     "mongoose": "^4.4.10",
@@ -54,6 +58,8 @@
     "remap-istanbul": "^0.7.0",
     "run-sequence": "^1.2.2",
     "sinon": "^1.17.6",
-    "supertest": "^2.0.0"
+    "sinon-chai": "^2.8.0",
+    "supertest": "^2.0.0",
+    "yargs": "^6.0.0"
   }
 }
