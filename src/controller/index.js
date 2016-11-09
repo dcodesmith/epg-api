@@ -1,6 +1,5 @@
 import HTTPStatus from 'http-status';
 import handler from './../../util/handler';
-// const validators = require('./validators');
 
 function errorHandler(next, err) {
   const error = new Error(err);
@@ -11,26 +10,10 @@ function errorHandler(next, err) {
 
 export default function createController(model, extra) {
   const modelHandler = handler(model);
-  // const validator = validators(model.modelName.toLowerCase());
 
   /* eslint-disable consistent-return */
   return Object.assign({}, {
     create(req, res, next) {
-      // TODO: Add error message. And read them in the tests
-      // let temp;
-      //
-      // req.check(validator.create);
-      // error = req.validationErrors();
-      // temp = error;
-      //
-      // if (error) {
-      //   error =  {};
-      //   error.status = 400;
-      //   error.message = temp;
-      //
-      //   return next(error);
-      // }
-
       modelHandler.create(req, (err, item) => {
         if (err) {
           return errorHandler(next, err);
@@ -45,7 +28,6 @@ export default function createController(model, extra) {
         if (err) {
           return errorHandler(next, err);
         }
-
         res.status(HTTPStatus.OK).json(items);
       });
     },
