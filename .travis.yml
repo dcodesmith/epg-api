@@ -22,10 +22,10 @@ env:
 
 before_install:
   - "./scripts/install.sh"
+  - npm install -g gulp
   - npm run build
 
 before_script:
-  - npm install -g gulp
   - npm prune
 
 after_script:
