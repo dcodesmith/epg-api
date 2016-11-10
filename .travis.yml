@@ -1,9 +1,34 @@
 language: node_js
+
 node_js:
   - 6
+
 services:
   - mongodb
+
+addons:
+  ssh_known_hosts:
+    - 162.243.207.143
+
+branches:
+  only:
+    - master
+
+env:
+  global:
+    - REMOTE_APP_DIR=/srv/www/node/app/
+    - REMOTE_USER=deploy
+    - REMOTE_HOST=162.243.207.143
+
+before_install:
+  - "./scripts/install.sh"
+
 before_script:
   - npm prune
+
 after_script:
   - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage
+  - rm -rf *
+
+after_success:
+  - "./scripts/deploy.sh"
