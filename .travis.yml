@@ -25,6 +25,7 @@ before_install:
   - npm run build
 
 before_script:
+  - npm install -g gulp
   - npm prune
 
 after_script:
