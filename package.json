@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "env $(cat config/.local.env) gulp serve",
+    "build": "gulp",
     "test:unit": "gulp test",
     "test:integration": "env $(cat config/.test.env) gulp test --integration",
     "test": "npm run test:integration",
