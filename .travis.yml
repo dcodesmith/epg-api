@@ -23,6 +23,7 @@ env:
 before_install:
   - "./scripts/install.sh"
   - npm install -g gulp
+  - npm install --save-dev gulp
   - npm run build
 
 before_script:
