@@ -44,7 +44,7 @@ const ProgrammeSchema = new Schema({
 
 mongoose.Promise = Promise;
 
-ProgrammeSchema.plugin(createdModified);
+// ProgrammeSchema.plugin(createdModified);
 ProgrammeSchema.plugin(crud);
 
 // TODO: Need to fix this

@@ -18,7 +18,7 @@ const ChannelSchema = new mongoose.Schema({
 // .virtual, .post, .static, .pre
 mongoose.Promise = Promise;
 
-ChannelSchema.plugin(createdModified);
+// ChannelSchema.plugin(createdModified);
 ChannelSchema.plugin(crud);
 
 // Channel.virtual('logoPath').get(() =>
