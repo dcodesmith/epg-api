@@ -1,11 +1,11 @@
 export default function createdModified(schema) {
-  schema.virtual('updatedAtISO').get(function createdModifiedVirtualupdatedAtISO() {
-    return new Date(this.updatedAt).toISOString();
-  });
+  // schema.virtual('updatedAtISO').get(function createdModifiedVirtualupdatedAtISO() {
+  //   return new Date(this.updatedAt).toISOString();
+  // });
 
-  schema.virtual('createdAtISO').get(function createdModifiedVirtualCreatedAtISO() {
-    return new Date(this.createdAt).toISOString();
-  });
+  // schema.virtual('createdAtISO').get(function createdModifiedVirtualCreatedAtISO() {
+  //   return new Date(this.createdAt).toISOString();
+  // });
 
   schema.set('toJSON', {
     getters: true,
