@@ -30,9 +30,9 @@ const imports = (req, res, next) => {
     , (error) => {
       res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
     })
-    // .then((programmes) => {
-    //   return Programme.find({}).populate('channel');
-    // })
+    .then((programmes) => {
+      return Programme.find({}).populate('channel');
+    })
     .then((programmes) => {
       res.status(HTTPStatus.CREATED).json(programmes);
     })
