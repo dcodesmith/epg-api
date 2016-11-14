@@ -93,7 +93,7 @@ describe(`${baseUrl}`, () => {
   });
 
   context('GET', () => {
-    describe('Given there are 4 Channels', () => {
+    describe.skip('Given there are 4 Channels', () => {
       const clonedMockData = cloneDeep(mockData);
 
       before((done) => {
@@ -204,7 +204,7 @@ describe(`${baseUrl}`, () => {
       });
     });
 
-    describe('Given there is a channel', () => {
+    describe.skip('Given there is a channel', () => {
       const channelId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
       const channel = cloneDeep(mockData[1]);
       channel._id = channelId;
