@@ -19,4 +19,6 @@ cd /srv/www/node/app && \
 tar zxvf package.tgz -C . && \
 cp -rf build/* . && \
 rm -rf build && \
-"$NVM_BIN/npm" i
+rm package.tgz && \
+
+$NVM_BIN/npm i
