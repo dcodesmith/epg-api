@@ -11,7 +11,7 @@ export NVM_DIR=$HOME/.nvm
 nvm install 6
 
 export NODE_ENV=production
-export NVM_BIN=$HOME/.nvm/versions/node/v5.10.1/bin
+export NVM_BIN=$HOME/.nvm/versions/node/v6.9.1/bin
 
 cd /srv/www/node/app && \
 tar zxvf package.tgz -C . && \
