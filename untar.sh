@@ -12,6 +12,6 @@ export NVM_BIN=$HOME/.nvm/versions/node/v5.10.1/bin
 
 cd /srv/www/node/app && \
 tar zxvf package.tgz -C . && \
-cp build/* . && \
+cp -rf build/* . && \
 rm -rf build && \
 "$NVM_BIN/npm" i
