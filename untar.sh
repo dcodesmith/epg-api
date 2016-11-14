@@ -8,7 +8,9 @@ set -x
 
 export NVM_DIR=$HOME/.nvm
 [ -s $NVM_DIR/nvm.sh ] && . $NVM_DIR/nvm.sh
+
 nvm install 6
+nvm use 6.9.1
 
 export NODE_ENV=production
 export NVM_BIN=$HOME/.nvm/versions/node/v6.9.1/bin
