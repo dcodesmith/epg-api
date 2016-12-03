@@ -15,6 +15,9 @@ nvm use 6.9.1
 export NODE_ENV=production
 export NVM_BIN=$HOME/.nvm/versions/node/v6.9.1/bin
 
+# Check node environment
+echo $NODE_ENV
+
 cd /srv/www/node/app && \
 tar zxvf package.tgz -C . && \
 cp -rf build/* . && \
