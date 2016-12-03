@@ -24,4 +24,7 @@ cp -rf build/* . && \
 rm -rf build && \
 rm package.tgz && \
 
+# Set production env variables
+export env $(cat config/.production.env)
+
 $NVM_BIN/npm i
