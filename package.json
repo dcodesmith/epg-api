@@ -4,7 +4,8 @@
   "description": "mini rest api to test csv upload and parse",
   "main": "index.js",
   "scripts": {
-    "start": "env $(cat config/.local.env) gulp serve",
+    "start": "dist/index.js",
+    "dev": "env $(cat config/.local.env) gulp serve",
     "build": "gulp",
     "test:unit": "gulp test",
     "test:integration": "env $(cat config/.test.env) gulp test --integration",
