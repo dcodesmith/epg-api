@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "heroku-prebuild": "npm i gulp --save && npm i -g gulp",
-    "heroku-postbuild": "gulp",
+    "heroku-postbuild": "which gulp && gulp",
     "start": "env $(cat config/.production.env) node dist/index.js",
     "dev": "env $(cat config/.local.env) gulp serve",
     "build": "gulp",
