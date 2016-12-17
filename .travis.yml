@@ -15,9 +15,10 @@ deploy:
     repo: dcodesmith/epg-api
   run:
     - echo first cat && cat index.js \
-      && npm run build\
+      && npm run build \
       && rm -rf scripts src README.md test util package.json index.js \
-      && cp -rf dist/* . && rm -rf dist \
+      && cp -rf dist/* . \
+      && rm -rf dist \
       && echo second cat && cat index.js \
       && "ls -al"
 
