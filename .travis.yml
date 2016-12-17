@@ -20,4 +20,4 @@ deploy:
 after_deploy:
   - npm run build
   - "ls -al"
-  - tree dist
+  - find dist
