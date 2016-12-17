@@ -20,5 +20,5 @@ deploy:
   #   - "ls -al"
 
 after_deploy:
-  - npm run build
+  # - npm run build
   - "ls -al"
