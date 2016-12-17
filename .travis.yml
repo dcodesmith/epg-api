@@ -20,4 +20,5 @@ deploy:
 after_deploy:
   - npm run build
   - "ls -al"
+  - pwd
   - find dist
