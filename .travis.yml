@@ -21,6 +21,4 @@ before_deploy:
   - cp -rf dist/* . && rm -rf dist
   - echo second cat && cat index.js
   - "ls -al"
-  - pwd
-  - find dist
   # - "./scripts/deploy.sh"
