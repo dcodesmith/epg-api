@@ -1,7 +1,7 @@
 {
-  "name": "miniapi",
+  "name": "epg-api",
   "version": "1.0.0",
-  "description": "mini rest api to test csv upload and parse",
+  "description": "EPG rest api to test csv upload and parse",
   "main": "index.js",
   "scripts": {
     "start": "env $(cat config/.production.env) node dist/index.js",

@@ -5,9 +5,7 @@ node_js:
 
 services:
   - mongodb
-
-before_deploy: "echo 'ready?'"
-
+§
 deploy:
   provider: heroku
   api_key:
@@ -22,4 +20,4 @@ deploy:
 after_deploy:
   - npm run build
   - "ls -al"
-  -
+  - tree dist
