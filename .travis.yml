@@ -12,6 +12,8 @@ deploy:
   app: epg-api
   on:
     repo: dcodesmith/epg-api
+  run:
+    - "ls -al"
 
 before_install:
   - npm install -g gulp
