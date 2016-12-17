@@ -19,10 +19,6 @@ deploy:
     - npm run build
     - "ls -al"
 
-before_install:
-  - npm install -g gulp
-  - npm install --save-dev gulp
-
 before_script:
   - npm prune
 

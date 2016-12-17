@@ -4,7 +4,7 @@
   "description": "mini rest api to test csv upload and parse",
   "main": "index.js",
   "scripts": {
-    "heroku-prebuild": "npm i gulp@3.9.0 && npm i -g gulp@3.9.0",
+    "heroku-prebuild": "npm i gulp@3.9.0 && npm i -g gulp@3.9.0 && npm i --save-dev gulp@3.9.0",
     "heroku-postbuild": "which gulp && gulp -v && gulp",
     "start": "env $(cat config/.production.env) node dist/index.js",
     "dev": "env $(cat config/.local.env) gulp serve",
