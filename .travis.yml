@@ -30,4 +30,6 @@ before_deploy:
   - cp -rf dist/* . && rm -rf dist
   - echo second cat && cat index.js
   - "ls -al"
-  # - "./scripts/deploy.sh"
+  - git add .
+  - git commit -m 'wip'
+  - git push heroku master
