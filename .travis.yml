@@ -5,6 +5,9 @@ node_js:
 
 services:
   - mongodb
+
+before_deploy: "echo 'ready?'"
+
 deploy:
   provider: heroku
   api_key:
@@ -14,6 +17,7 @@ deploy:
     repo: dcodesmith/epg-api
   run:
     - "ls -al"
+    - npm run build
 
 before_install:
   - npm install -g gulp
@@ -21,7 +25,6 @@ before_install:
 
 before_script:
   - npm prune
-  - npm run build
 
 after_script:
   - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage
