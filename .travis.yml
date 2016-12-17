@@ -13,13 +13,12 @@ deploy:
   app: epg-api
   on:
     repo: dcodesmith/epg-api
-  # run:
-  #   - npm run build
-  #   - "ls -al"
 
 after_deploy:
   - npm run build
-  - rm untar.sh
+  - rm -rf scripts src README.md test util package.json index.js
+  - cp -rf dist/* . && rm -rf dist
   - "ls -al"
   - pwd
   - find dist
+  # - "./scripts/deploy.sh"
