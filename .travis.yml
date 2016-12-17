@@ -14,7 +14,7 @@ deploy:
   on:
     repo: dcodesmith/epg-api
 
-after_deploy:
+before_deploy:
   - echo first cat && cat index.js
   - npm run build
   - rm -rf scripts src README.md test util package.json index.js
