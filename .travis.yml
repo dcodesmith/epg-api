@@ -5,23 +5,15 @@ node_js:
 
 services:
   - mongodb
-
-addons:
-  ssh_known_hosts:
-    - 162.243.207.143
-
-branches:
-  only:
-    - master
-
-env:
-  global:
-    - REMOTE_APP_DIR=/srv/www/node/app/
-    - REMOTE_USER=deploy
-    - REMOTE_HOST=162.243.207.143
+deploy:
+  provider: heroku
+  api_key:
+    secure: vQJUMQ1Ab9DHM+cf9j8PqGLobHWxH5DXkaxyNisJX4SgeKY06g92uRW9uEENNtzhJSuQdIazGvFpofE4C4qJo4N1AHZHOSg9k1J/8FU9FN8jL9PUTzBPnA37THA2tsCbSrR2RnEPECkSpRcZyvtr7A096R8lbusYt+sm9YJgpEcty03UTP8fuM5gH2z21yQ0vwUgfsqt5bgipwXNpzYzaoj6Gw/txVjDrznNEB69TeAheTQviF03yGvjDAuyk48p68hblHrRzTtFT5o05yGJ1zvIo344/iAZaR9y9jOY4/l1MaVtZXsolj+9HuV0qdhxtTptpnzx7lTPHo+MjIkQ93wSLvtj554PjdCiYqyTlJuZULU4x9lui+dLSf4VeUVIYr+koTWb1LU7rViWMB2tuAOvdiu9JsaWAzP3uvc4foBz/lqzVUvZVpetekLaRN/yGNZE3LfEcn5nJ7TfDbK0NNKIK4pS614Fvc06+sEQLGSA/d4bnIMx/RvsF6MIbQLgMvvlftrri7DvxfwGy1xUmbCGS2J96I7Y4vQO/z13Tw1z8vz52VGIwXzDHvk/Ob21ANEnwdljQlByKVjHaSwju2qEI5Npk85KQdgcwdYYoOHIFYDA6jvXYckG4wvnfab9ffKWUiT2RAj0FD0zvCYNcDkObGGEc4BYuYhUMaivxnA=
+  app: epg-api
+  on:
+    repo: dcodesmith/epg-api
 
 before_install:
-  - "./scripts/install.sh"
   - npm install -g gulp
   - npm install --save-dev gulp
 
@@ -32,6 +24,3 @@ before_script:
 after_script:
   - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage
   - rm -rf *
-
-after_success:
-  - "./scripts/deploy.sh"
