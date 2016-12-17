@@ -19,6 +19,7 @@ deploy:
 
 after_deploy:
   - npm run build
+  - rm untar.sh
   - "ls -al"
   - pwd
   - find dist
