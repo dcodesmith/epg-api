@@ -4,7 +4,7 @@
   "description": "EPG rest api to test csv upload and parse",
   "main": "index.js",
   "scripts": {
-    "start": "pwd && env $(cat config/.production.env) node dist/index.js",
+    "start": "pwd && env $(cat config/.production.env) node index.js",
     "dev": "env $(cat config/.local.env) gulp serve",
     "build": "gulp",
     "test:unit": "gulp test",
