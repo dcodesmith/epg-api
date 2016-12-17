@@ -16,8 +16,8 @@ deploy:
   on:
     repo: dcodesmith/epg-api
   run:
-    - "ls -al"
     - npm run build
+    - "ls -al"
 
 before_install:
   - npm install -g gulp
