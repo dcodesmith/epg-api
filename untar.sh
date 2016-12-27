@@ -22,6 +22,8 @@ cd /srv/www/node/app && \
 tar zxvf package.tgz -C . && \
 cp -rf build/* . && \
 rm -rf build && \
+rm -rf utils index.js && \
+cp -rf dist/* . && rm -rf dist && \
 rm package.tgz && \
 
 # Set production env variables
