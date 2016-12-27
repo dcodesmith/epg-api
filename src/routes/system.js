@@ -4,7 +4,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .get('/', (req, res) => {
-    res.json({ status: 'ok!' })
+    res.json({ status: 'ok!!!' })
   });
 
 export default router;
