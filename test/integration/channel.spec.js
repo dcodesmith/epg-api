@@ -7,7 +7,7 @@ import Channel from '../../src/model/Channel';
 import { promisifyRequest, assert } from '../helper';
 import mockData from '../fixtures/channels';
 
-const baseUrl = '/api/channels';
+const baseUrl = '/v1/channels';
 const request = promisifyRequest(baseUrl);
 
 describe(`${baseUrl}`, () => {

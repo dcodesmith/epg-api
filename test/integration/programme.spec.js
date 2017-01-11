@@ -11,7 +11,7 @@ import channelData from '../fixtures/channels';
 import programmeMockData from '../fixtures/programmes';
 import app from '../../src/server';
 
-const baseUrl = '/api/programmes';
+const baseUrl = '/v1/programmes';
 const assertRequest = helper.assertRequest(baseUrl); // eslint-disable-line no-redeclare
 const request = helper.promisifyRequest(baseUrl);
 const channelMockData = cloneDeep(channelData);

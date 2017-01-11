@@ -21,9 +21,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(validator());
 
-app.use('/api', routes);
+app.use('/v1', routes);
 
-app.use('/api', (err, req, res) => {
+app.use('/v1', (err, req, res) => {
   res.status(err.status || HTTPStatus.INTERNAL_SERVER_ERROR)
     .json({ message: err.message, error: err.error || {} });
 });
