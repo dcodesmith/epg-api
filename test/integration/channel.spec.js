@@ -229,9 +229,8 @@ describe(`${baseUrl}`, () => {
 
         it('should return a channel', () => {
           channel._id = channel._id.toString();
-          console.log('channel', channel);
           delete channel.id;
-          console.log(response.body);
+
           assert(response.body, channel);
         });
 
