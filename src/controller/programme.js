@@ -2,7 +2,11 @@ import stream from 'stream';
 import HTTPStatus from 'http-status';
 import parseCSV from '../csv';
 import Programme from '../model/Programme';
+import Channel from '../model/Channel';
 import createController from './index';
+import async from 'async';
+
+// TODO: refactor queries into promises.
 
 const errorHandler = (next, err) => {
   if (err) {
@@ -25,20 +29,48 @@ const imports = (req, res, next) => {
 
   bufferStream.end(req.file.buffer);
 
-  parseCSV(bufferStream)
-    .then((result) => { return Programme.create(result); }
-    , (error) => {
-      res.status(HTTPStatus.BAD_REQUEST).json({ errors: error });
-    })
-    .then((programmes) => {
-      return Programme.find({}).populate('channel');
-    })
-    .then((programmes) => {
-      res.status(HTTPStatus.CREATED).json(programmes);
-    })
-    .catch((err) => {
-      errorHandler(next, err);
+  const getAllChannels = (callback) => {
+    Channel.find()
+      .then((channels) => {
+        callback(null, channels);
+    }).catch(callback);
+  };
+
+  const parse = (channels, callback) => {
+    parseCSV(bufferStream, channels)
+      .then((programmes) => {
+        callback(null, programmes);
+      }).catch(callback);
+  };
+
+  const saveProgrammes = (programmes, callback) => {
+    Programme.create(programmes, (err) => {
+      if (err) {
+        return callback(err, null);
+      }
+      callback(null);
     });
+  }
+
+  const getAllProgrammes = (callback) => {
+    Programme.find().populate('channel').then((programmes) => {
+      callback(null, programmes);
+    }).catch(callback);
+  }
+
+  async.waterfall([
+      getAllChannels,
+      parse,
+      saveProgrammes,
+      getAllProgrammes
+  ], (err, result) => {
+
+      if (err) {
+        return errorHandler(next, err);
+      }
+
+      res.status(HTTPStatus.CREATED).json(result);
+  });
 };
 
 export default createController(Programme, { import: imports });
