@@ -6,10 +6,7 @@ const validRows = [];
 const invalidRows = [];
 
 export default function (csvData, channels) {
-  const options = {
-    trim: true,
-    headers: true
-  };
+  const options = { trim: true, headers: true };
 
   const parser = (resolve, reject) => {
 
