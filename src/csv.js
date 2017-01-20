@@ -1,7 +1,6 @@
 import csv from 'fast-csv';
-import Channel from './model/Channel';
 import Programme from './model/Programme';
-import _ from 'lodash';
+import { find } from 'lodash';
 
 const validRows = [];
 const invalidRows = [];
@@ -48,7 +47,7 @@ export default function (csvData, channels) {
     };
 
     const onTransform = (row) => {
-      const channel = _.find(channels, { code: row.channelCode });
+      const channel = find(channels, { code: row.channelCode });
 
       delete row.channelCode;
 
