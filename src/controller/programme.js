@@ -6,8 +6,6 @@ import Channel from '../model/Channel';
 import createController from './index';
 import async from 'async';
 
-// TODO: refactor queries into promises.
-
 const errorHandler = (next, err) => {
   if (err) {
     const error = new Error(err);
@@ -30,29 +28,19 @@ const imports = (req, res, next) => {
   bufferStream.end(req.file.buffer);
 
   const getAllChannels = (callback) => {
-    Channel.find()
-      .then((channels) => {
-        callback(null, channels);
-    }).catch(callback);
+    Channel.find(callback);
   };
 
   const parse = (channels, callback) => {
-    parseCSV(bufferStream, channels)
-      .then((programmes) => {
-        callback(null, programmes);
-      }).catch(callback);
+    parseCSV(bufferStream, channels, callback);
   };
 
   const saveProgrammes = (programmes, callback) => {
-    Programme.create(programmes, (err) => {
-      if (err) {
-        return callback(err, null);
-      }
-      callback(null);
-    });
+    Programme.create(programmes, callback);
   }
 
-  const getAllProgrammes = (callback) => {
+  const getAllProgrammes = (results, callback) => {
+  // TODO - Refactor to use callback
     Programme.find().populate('channel').then((programmes) => {
       callback(null, programmes);
     }).catch(callback);
