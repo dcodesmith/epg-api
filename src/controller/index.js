@@ -19,7 +19,7 @@ export default function createController(model, extra) {
           return errorHandler(next, err);
         }
 
-        res.status(HTTPStatus.CREATED).json(item);
+        res.status(HTTPStatus.CREATED).json(item.toJSON());
       });
     },
 
@@ -28,6 +28,9 @@ export default function createController(model, extra) {
         if (err) {
           return errorHandler(next, err);
         }
+
+        items = items.map(item => { return item.toJSON() });
+
         res.status(HTTPStatus.OK).json(items);
       });
     },
@@ -42,7 +45,7 @@ export default function createController(model, extra) {
           return res.sendStatus(HTTPStatus.NOT_FOUND);
         }
 
-        res.status(HTTPStatus.OK).json(item);
+        res.status(HTTPStatus.OK).json(item.toJSON());
       });
     },
 
