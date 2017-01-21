@@ -45,7 +45,7 @@ describe(`${baseUrl}`, () => {
         });
       });
 
-      describe('When a request is made to create 4 new channels', () => {
+      describe.skip('When a request is made to create 4 new channels', () => {
         const channels = mockData;
         let response = {};
 
@@ -93,7 +93,7 @@ describe(`${baseUrl}`, () => {
   });
 
   context('GET', () => {
-    describe.skip('Given there are 4 Channels', () => {
+    describe('Given there are 4 Channels', () => {
       const clonedMockData = cloneDeep(mockData);
 
       before((done) => {
@@ -114,7 +114,7 @@ describe(`${baseUrl}`, () => {
           });
         });
 
-        it('should return 4 channels', () => {
+        it.skip('should return 4 channels', () => {
           assert(response.body, clonedMockData);
         });
 
@@ -204,7 +204,7 @@ describe(`${baseUrl}`, () => {
       });
     });
 
-    describe.skip('Given there is a channel', () => {
+    describe('Given there is a channel', () => {
       const channelId = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
       const channel = cloneDeep(mockData[1]);
       channel._id = channelId;
@@ -227,7 +227,7 @@ describe(`${baseUrl}`, () => {
           });
         });
 
-        it('should return a channel', () => {
+        it.skip('should return a channel', () => {
           channel._id = channel._id.toString();
           delete channel.id;
 

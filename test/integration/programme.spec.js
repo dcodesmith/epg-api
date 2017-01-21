@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, map } from 'lodash';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
 import HTTPStatus from 'http-status';
@@ -20,7 +20,7 @@ const clonedMockData = programmeMockData.map((data) => {
 
   delete clonedData.channelCode;
 
-  clonedData.channel = mongoose.Types.ObjectId(); // eslint-disable-line new-cap
+  clonedData.channel = String(mongoose.Types.ObjectId()); // eslint-disable-line new-cap
   clonedData.date = new Date(data.date).toISOString();
 
   return clonedData;
@@ -128,7 +128,7 @@ describe(`${baseUrl}`, () => {
   });
 
   context('GET', () => {
-    describe.skip('Given there are 4 programmes', () => {
+    describe('Given there are 4 programmes', () => {
       before((done) => {
         Programme.create(clonedMockData, done);
       });
@@ -141,14 +141,17 @@ describe(`${baseUrl}`, () => {
         let response;
 
         before((done) => {
-          request({ method: 'get' }).then((res) => {
+          const query = {  };
+           request({ method: 'get' }).then((res) => {
             response = res;
             done();
           });
         });
 
-        it('should return programmes', () => {
-          helper.assert(response.body, clonedMockData);
+        it.skip('should return programmes', () => {
+          const actual = map(response.body, function(row) { delete row.id; row.channel = String(row.channel); return row; });
+
+          expect(actual).to.have.same.members(clonedMockData);
         });
 
         it('should have a 200 status code', () => {
