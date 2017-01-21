@@ -28,7 +28,7 @@ export default function (csvData, channels, callbackFn) {
       let isRowValid = true;
       const programme = new Programme(row);
 
-      programme.validate((err) => {
+      programme.validate(err => {
         if (err) {
           isRowValid = !isRowValid;
         }
