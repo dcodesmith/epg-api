@@ -5,10 +5,24 @@ import { find } from 'lodash';
 const validRows = [];
 const invalidRows = [];
 
-export default function (csvData, channels) {
+/*
+|---------------------------------------------------------------
+| Usage
+|---------------------------------------------------------------
+| As a Promise -> parseCSV(bufferStream, channels)
+|                   .then((programmes) => {
+|                     callback(null, programmes);
+|                   }).catch(callback);
+|
+| As a callback -> parseCSV(bufferStream, channels, callbackFn);
+|
+*/
+
+export default function (csvData, channels, callbackFn) {
   const options = { trim: true, headers: true };
 
-  const parser = (resolve, reject) => {
+  const parser = (...args) => {
+    const [ resolve, reject ] = args;
 
     const onValidateRow = (row, next) => {
       let isRowValid = true;
@@ -37,7 +51,16 @@ export default function (csvData, channels) {
       const errors = invalidRows.map(row => ({ row: row.rowNumber, data: row.data }));
 
       if (errors.length) {
+
+        if (callbackFn) {
+          return callbackFn(errors, null);
+        }
+
         return reject(errors);
+      }
+
+      if (callbackFn) {
+        return callbackFn(null, validRows);
       }
 
       return resolve(validRows);
@@ -60,6 +83,10 @@ export default function (csvData, channels) {
       .on('data-invalid', onInvalidRow)
       .on('data', onData)
       .on('end', onEnd);
+  }
+
+  if (callbackFn) {
+    return parser();
   }
 
   return new Promise(parser);
