@@ -1,17 +1,18 @@
 import stream from 'stream';
 import HTTPStatus from 'http-status';
+import waterfall from 'async/waterfall';
+
 import parseCSV from '../csv';
 import Programme from '../model/Programme';
 import Channel from '../model/Channel';
 import createController from './index';
-import async from 'async';
 
 const errorHandler = (next, err) => {
   if (err) {
     const error = new Error(err);
     error.status = 400;
 
-    next(err);
+    next(error);
   }
 };
 
@@ -25,7 +26,11 @@ const imports = (req, res, next) => {
     return;
   }
 
+  console.log('PRE buff len', bufferStream.length);
+
   bufferStream.end(req.file.buffer);
+
+  console.log('POST buff len', bufferStream.length);
 
   const getAllChannels = (callback) => {
     Channel.find(callback);
@@ -36,28 +41,28 @@ const imports = (req, res, next) => {
   };
 
   const saveProgrammes = (programmes, callback) => {
+    console.log('len', programmes.length);
     Programme.create(programmes, callback);
-  }
+  };
 
   const getAllProgrammes = (results, callback) => {
     // TODO - Refactor to use callback
     Programme.find().populate('channel').then((programmes) => {
       callback(null, programmes);
     }).catch(callback);
-  }
+  };
 
-  async.waterfall([
-      getAllChannels,
-      parse,
-      saveProgrammes,
-      getAllProgrammes
+  waterfall([
+    getAllChannels,
+    parse,
+    saveProgrammes,
+    getAllProgrammes
   ], (err, result) => {
+    if (err) {
+      return errorHandler(next, err);
+    }
 
-      if (err) {
-        return errorHandler(next, err);
-      }
-
-      res.status(HTTPStatus.CREATED).json(result);
+    res.status(HTTPStatus.CREATED).json(result);
   });
 };
 

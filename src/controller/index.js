@@ -5,7 +5,7 @@ function errorHandler(next, err) {
   const error = new Error(err);
   error.status = HTTPStatus.BAD_REQUEST;
 
-  next(err);
+  next(error);
 }
 
 export default function createController(model, extra) {
@@ -29,7 +29,7 @@ export default function createController(model, extra) {
           return errorHandler(next, err);
         }
 
-        items = items.map(item => { return item.toJSON() });
+        items = items.map(item => item.toJSON());
 
         res.status(HTTPStatus.OK).json(items);
       });

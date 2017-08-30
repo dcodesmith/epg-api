@@ -1,9 +1,7 @@
 import csv from 'fast-csv';
-import Programme from './model/Programme';
-import { find } from 'lodash';
+import find from 'lodash/find';
 
-const validRows = [];
-const invalidRows = [];
+import Programme from './model/Programme';
 
 /*
 |---------------------------------------------------------------
@@ -20,18 +18,21 @@ const invalidRows = [];
 
 export default function (csvData, channels, callbackFn) {
   const options = { trim: true, headers: true };
+  const validRows = [];
+  const invalidRows = [];
 
   const parser = (...args) => {
-    const [ resolve, reject ] = args;
+    const [resolve, reject] = args;
 
     const onValidateRow = (row, next) => {
       let isRowValid = true;
       const programme = new Programme(row);
 
-      programme.validate(err => {
+      programme.validate((err) => {
         if (err) {
           isRowValid = !isRowValid;
         }
+
         next(null, isRowValid);
       });
     };
@@ -51,7 +52,6 @@ export default function (csvData, channels, callbackFn) {
       const errors = invalidRows.map(row => ({ row: row.rowNumber, data: row.data }));
 
       if (errors.length) {
-
         if (callbackFn) {
           return callbackFn(errors, null);
         }
@@ -83,7 +83,7 @@ export default function (csvData, channels, callbackFn) {
       .on('data-invalid', onInvalidRow)
       .on('data', onData)
       .on('end', onEnd);
-  }
+  };
 
   if (callbackFn) {
     return parser();
