@@ -59,19 +59,18 @@ gulp.task('test', () => {
   return gulp.src([paths.tests[testType]], { read: false })
     .pipe(plugins.plumber())
     .pipe(plugins.mocha({
+      exit: true,
       reporter: 'spec',
       ui: 'bdd',
       recursive: true,
-      compilers: {
-        js: babelCompiler
-      }
+      require: 'babel-core/register'
     }))
-    .once('error', (err) => {
-      plugins.util.log(err);
+    .once('error', (error) => {
+      plugins.util.log(error);
       exitCode = 1;
     })
     .once('end', () => {
-      plugins.util.log('completed !!');
+      plugins.util.log('completed!');
       process.exit(exitCode);
     });
 });
