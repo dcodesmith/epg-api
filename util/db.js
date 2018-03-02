@@ -55,9 +55,7 @@ const connectWithRetry = (hostString, options) => {
 const connect = () => {
   const hostString = getReplicaHostString();
   const options = {
-    server: {
-      auto_reconnect: true
-    }
+    auto_reconnect: true
   };
   connectWithRetry(hostString, options);
 };
