@@ -20,8 +20,8 @@ const ProgrammeSchema = new Schema({
   },
   description: String,
   synopsis: String,
-  date: {
-    type: Date,
+  day: {
+    type: Number,
     required: true
   },
   startTime: {

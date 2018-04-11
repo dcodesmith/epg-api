@@ -1,80 +1,84 @@
-import HTTPStatus from 'http-status';
+import {
+  OK,
+  CREATED,
+  NOT_FOUND,
+  BAD_REQUEST,
+  NO_CONTENT
+} from 'http-status';
 import handler from './../../util/handler';
 
-function errorHandler(next, err) {
+const errorHandler = (next, err) => {
   const error = new Error(err);
-  error.status = HTTPStatus.BAD_REQUEST;
+  error.status = BAD_REQUEST;
 
   next(error);
-}
+};
 
-export default function createController(model, extra) {
+export default (model, extra) => {
   const modelHandler = handler(model);
 
   /* eslint-disable consistent-return */
   return Object.assign({}, {
-    create(req, res, next) {
-      modelHandler.create(req, (err, item) => {
-        if (err) {
-          return errorHandler(next, err);
+    create(request, response, next) {
+      modelHandler.create(request, (error, items) => {
+        if (error) {
+          return errorHandler(next, error);
         }
 
-        res.status(HTTPStatus.CREATED).json(item.toJSON());
+        response.status(CREATED).json(items);
       });
     },
 
-    readAll(req, res, next) {
-      modelHandler.read.all(req, (err, items) => {
-        if (err) {
-          return errorHandler(next, err);
+    readAll(request, response, next) {
+      modelHandler.read.all(request, (error, items) => {
+        if (error) {
+          return errorHandler(next, error);
         }
 
-        items = items.map(item => item.toJSON());
-
-        res.status(HTTPStatus.OK).json(items);
+        response.status(OK).json(items);
       });
     },
 
-    readOne(req, res, next) {
-      modelHandler.read.one(req, (err, item) => {
-        if (err) {
-          return errorHandler(next, err);
+    readOne(request, response, next) {
+      modelHandler.read.one(request, (error, item) => {
+        if (error) {
+          return errorHandler(next, error);
         }
 
         if (!item) {
-          return res.sendStatus(HTTPStatus.NOT_FOUND);
+          return response.sendStatus(NOT_FOUND);
         }
 
-        res.status(HTTPStatus.OK).json(item.toJSON());
+        response.status(OK).json(item.toJSON());
       });
     },
 
-    update(req, res, next) {
-      modelHandler.update(req, (err, item) => {
-        if (err) {
-          return errorHandler(next, err);
+    update(request, response, next) {
+      modelHandler.update(request, (error, item) => {
+        if (error) {
+          return errorHandler(next, error);
         }
 
         if (!item) {
-          return res.sendStatus(HTTPStatus.NOT_FOUND);
+          return response.sendStatus(NOT_FOUND);
         }
 
-        res.sendStatus(HTTPStatus.OK);
+        response.sendStatus(OK);
       });
     },
 
-    delete(req, res, next) {
-      modelHandler.delete(req, (err, item) => {
-        if (err) {
-          return errorHandler(next, err);
+    del(request, response, next) {
+      modelHandler.delete(request, (error, item) => {
+        if (error) {
+          return errorHandler(next, error);
         }
 
         if (!item) {
-          return res.sendStatus(HTTPStatus.NOT_FOUND);
+          return response.sendStatus(NOT_FOUND);
         }
 
-        res.sendStatus(HTTPStatus.NO_CONTENT);
+        response.sendStatus(NO_CONTENT);
       });
     }
   }, extra);
-}
+};

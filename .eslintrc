@@ -1,12 +1,5 @@
 {
   "rules": {
-    "indent": [
-      2,
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
     "space-before-function-paren": [
       2,
       {
@@ -18,7 +11,6 @@
       2,
       "nofunc"
     ],
-    // TODO: turn on later
     "comma-dangle": [
       0
     ],
