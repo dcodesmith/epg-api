@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import mongoose from 'mongoose';
 import HTTPStatus from 'http-status';
 import { cloneDeep } from 'lodash';
-import Channel from '../../src/model/Channel';
+import Channel from '../../src/models/Channel';
 import { promisifyRequest, assert } from '../helper';
 import mockData from '../fixtures/channels';
 

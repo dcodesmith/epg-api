@@ -2,8 +2,8 @@ import stream from 'stream';
 import HTTPStatus from 'http-status';
 import waterfall from 'async/waterfall';
 import parseCSV from '../csv';
-import Programme from '../model/Programme';
-import Channel from '../model/Channel';
+import Programme from '../models/Programme';
+import Channel from '../models/Channel';
 import createController from './index';
 
 const errorHandler = (next, err) => {
