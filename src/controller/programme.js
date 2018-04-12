@@ -1,7 +1,6 @@
 import stream from 'stream';
 import HTTPStatus from 'http-status';
 import waterfall from 'async/waterfall';
-
 import parseCSV from '../csv';
 import Programme from '../model/Programme';
 import Channel from '../model/Channel';
@@ -16,54 +15,45 @@ const errorHandler = (next, err) => {
   }
 };
 
-const imports = (req, res, next) => {
+const importCSV = (request, response, next) => {
   const bufferStream = new stream.PassThrough();
+  const { file } = request;
 
-  if (!req.file) {
-    res.status(HTTPStatus.BAD_REQUEST).json({
-      message: 'no csv file found'
-    });
+  if (!file) {
+    // NoCSVFile exception
+    response
+      .status(HTTPStatus.BAD_REQUEST)
+      .json({
+        message: 'no csv file found'
+      });
+
     return;
   }
 
-  console.log('PRE buff len', bufferStream.length);
+  bufferStream.end(file.buffer);
 
-  bufferStream.end(req.file.buffer);
-
-  console.log('POST buff len', bufferStream.length);
-
-  const getAllChannels = (callback) => {
-    Channel.find(callback);
-  };
-
-  const parse = (channels, callback) => {
-    parseCSV(bufferStream, channels, callback);
-  };
-
-  const saveProgrammes = (programmes, callback) => {
-    console.log('len', programmes.length);
-    Programme.create(programmes, callback);
-  };
-
+  const getAllChannels = callback => Channel.find(callback);
+  const parse = (channels, callback) => parseCSV(bufferStream, channels, callback);
+  const saveProgrammes = (programmes, callback) => Programme.create(programmes, callback);
   const getAllProgrammes = (results, callback) => {
     // TODO - Refactor to use callback
-    Programme.find().populate('channel').then((programmes) => {
-      callback(null, programmes);
-    }).catch(callback);
+    Programme
+      .find()
+      .populate('channel')
+      .then(programmes => callback(null, programmes))
+      .catch(callback);
   };
 
-  waterfall([
-    getAllChannels,
-    parse,
-    saveProgrammes,
-    getAllProgrammes
-  ], (err, result) => {
-    if (err) {
-      return errorHandler(next, err);
+  const tasks = [getAllChannels, parse, saveProgrammes, getAllProgrammes];
+
+  waterfall(tasks, (error, result) => {
+    if (error) {
+      // check the error type
+      return errorHandler(next, error);
     }
 
-    res.status(HTTPStatus.CREATED).json(result);
+    return response.status(HTTPStatus.CREATED).json(result);
   });
 };
 
-export default createController(Programme, { import: imports });
+export default createController(Programme, { importCSV });

@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
 import winston from 'winston';
 
-const username = process.env.DATABASEUSER;
-const password = process.env.DATABASEPASSWORD;
-const port = process.env.DATABASEPORT;
-const name = process.env.DATABASENAME;
+const {
+  DATABASEUSER,
+  DATABASEPASSWORD,
+  DATABASEPORT,
+  DATABASENAME,
+  DBSERVERS
+} = process.env;
 const RECONNECT_TIME = 5000;
 const STATES = {
   0: { status: 'Disconnected', code: 0 },
@@ -16,21 +19,21 @@ const STATES = {
 };
 
 const createDbCredentialString = () => {
-  if (!username && !password) {
+  if (!DATABASEUSER && !DATABASEPASSWORD) {
     return '';
   }
 
-  return `${username}:${password}@`;
+  return `${DATABASEUSER}:${DATABASEPASSWORD}@`;
 };
 
 const getReplicaHostString = () => {
-  const hosts = process.env.DBSERVERS.split(',');
+  const hosts = DBSERVERS.split(',');
   const hostsArray = [];
   const dbCredentials = createDbCredentialString();
   let dbUrl;
 
   hosts.forEach((db) => {
-    dbUrl = `mongodb://${dbCredentials}${db}:${port}/${name}`;
+    dbUrl = `mongodb://${dbCredentials}${db}:${DATABASEPORT}/${DATABASENAME}`;
 
     hostsArray.push(dbUrl);
   });
@@ -41,9 +44,9 @@ const getReplicaHostString = () => {
 // http://bites.goodeggs.com/posts/reconnecting-to-mongodb-when-mongoose-connect-fails-at-startup/
 
 const connectWithRetry = (hostString, options) => {
-  mongoose.connect(hostString, options, (err) => {
-    if (err) {
-      winston.error('Failed to connect to mongo on startup - retrying in 5 sec', err);
+  mongoose.connect(hostString, options, (error) => {
+    if (error) {
+      winston.error('Failed to connect to mongo on startup - retrying in 5 sec', error);
       mongoose.disconnect();
       setTimeout(connectWithRetry.bind(null, hostString, options), RECONNECT_TIME);
     }
@@ -52,21 +55,23 @@ const connectWithRetry = (hostString, options) => {
   });
 };
 
-const connect = () => {
+const connect = (callback) => {
   const hostString = getReplicaHostString();
   const options = {
-    auto_reconnect: true
+    socketTimeoutMS: 0,
+    keepAlive: true,
+    reconnectTries: 5
   };
+
   connectWithRetry(hostString, options);
+
+  if (callback && typeof callback === 'function') {
+    callback();
+  }
 };
 
-const disconnect = (next) => { mongoose.disconnect(next); };
+const disconnect = next => mongoose.disconnect(next);
 
-const status = () => {
-  const dbStatus = STATES[mongoose.connection.readyState];
-
-  return dbStatus;
-};
-
+const status = () => STATES[mongoose.connection.readyState];
 
 export { connect, disconnect, status };

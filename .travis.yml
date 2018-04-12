@@ -22,12 +22,12 @@ env:
 
 before_install:
   - "./scripts/install.sh"
-  - npm install -g gulp
-  - npm install --save-dev gulp
+  - yarn global add gulp
+  - yarn add -D gulp
 
 before_script:
-  - npm prune
-  - npm run build
+  - yarn
+  - yarn build
 
 # after_script:
 #   - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage

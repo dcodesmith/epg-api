@@ -23,9 +23,12 @@ app.use(validator());
 
 app.use('/v1', routes);
 
-app.use('/v1', (err, req, res) => {
-  res.status(err.status || HTTPStatus.INTERNAL_SERVER_ERROR)
-    .json({ message: err.message, error: err.error || {} });
+app.use('/v1', (err, request, response, next) => { // eslint-disable-line no-unused-vars
+  const { status = HTTPStatus.INTERNAL_SERVER_ERROR, message, error = {} } = err;
+
+  response
+    .status(status)
+    .json({ message, error });
 });
 
 export default app;

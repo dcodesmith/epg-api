@@ -16,7 +16,7 @@ import Programme from './model/Programme';
 |
 */
 
-export default function (csvData, channels, callbackFn) {
+export default (csvData, channels, callbackFn) => {
   const options = { trim: true, headers: true };
   const validRows = [];
   const invalidRows = [];
@@ -28,8 +28,8 @@ export default function (csvData, channels, callbackFn) {
       let isRowValid = true;
       const programme = new Programme(row);
 
-      programme.validate((err) => {
-        if (err) {
+      programme.validate((error) => {
+        if (error) {
           isRowValid = !isRowValid;
         }
 
@@ -44,9 +44,7 @@ export default function (csvData, channels, callbackFn) {
       });
     };
 
-    const onData = (validRow) => {
-      validRows.push(validRow);
-    };
+    const onData = validRow => validRows.push(validRow);
 
     const onEnd = () => {
       const errors = invalidRows.map(row => ({ row: row.rowNumber, data: row.data }));
@@ -67,13 +65,12 @@ export default function (csvData, channels, callbackFn) {
     };
 
     const onTransform = (row) => {
-      const channel = find(channels, { code: row.channelCode });
+      const { id: channelId } = find(channels, { code: row.channelCode });
+      const { channelCode, ...rest } = row;
 
-      delete row.channelCode;
+      rest.channel = channelId;
 
-      row.channel = channel.id;
-
-      return row;
+      return rest;
     };
 
     csv
@@ -90,4 +87,4 @@ export default function (csvData, channels, callbackFn) {
   }
 
   return new Promise(parser);
-}
+};
