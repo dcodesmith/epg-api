@@ -1,5 +1,5 @@
 import express from 'express';
-import channel from '../controller/channel';
+import channel from '../controllers/channel';
 
 const {
   create,
