@@ -7,7 +7,8 @@ const {
   DATABASEPASSWORD,
   DATABASEPORT,
   DATABASENAME,
-  DBSERVERS
+  DBSERVERS,
+  NODE_ENV
 } = process.env;
 const RECONNECT_TIME = 5000;
 const STATES = {
@@ -30,6 +31,11 @@ const createDbCredentialString = () => {
 const getReplicaHostString = () => {
   const hosts = DBSERVERS.split(',');
   const dbCredentials = createDbCredentialString();
+
+  // TODO: Revisit!
+  if (NODE_ENV === 'test') {
+    return `mongodb://127.0.0.1:${DATABASEPORT}/${DATABASENAME}`;
+  }
 
   return hosts
     .map(host => `mongodb://${dbCredentials}${host}:${DATABASEPORT}/${DATABASENAME}`)

@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(validator());
 
-if (envirnoment === 'production') {
+if (envirnoment !== 'development' && envirnoment !== 'test') {
   app.use(httpLogger);
 }
 
