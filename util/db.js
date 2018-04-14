@@ -1,12 +1,14 @@
 import mongoose from 'mongoose';
-import winston from 'winston';
+
+import logger from './logger';
 
 const {
   DATABASEUSER,
   DATABASEPASSWORD,
   DATABASEPORT,
   DATABASENAME,
-  DBSERVERS
+  DBSERVERS,
+  NODE_ENV
 } = process.env;
 const RECONNECT_TIME = 5000;
 const STATES = {
@@ -30,6 +32,11 @@ const getReplicaHostString = () => {
   const hosts = DBSERVERS.split(',');
   const dbCredentials = createDbCredentialString();
 
+  // TODO: Revisit!
+  if (NODE_ENV === 'test') {
+    return `mongodb://127.0.0.1:${DATABASEPORT}/${DATABASENAME}`;
+  }
+
   return hosts
     .map(host => `mongodb://${dbCredentials}${host}:${DATABASEPORT}/${DATABASENAME}`)
     .join(',');
@@ -40,12 +47,12 @@ const getReplicaHostString = () => {
 const connectWithRetry = (hostString, options) => {
   mongoose.connect(hostString, options, (error) => {
     if (error) {
-      winston.error('Failed to connect to mongo on startup - retrying in 5 sec', error);
+      logger.error('Failed to connect to mongo on startup - retrying in 5 sec', error);
       mongoose.disconnect();
       setTimeout(connectWithRetry.bind(null, hostString, options), RECONNECT_TIME);
     }
-    // TODO: replace with winston logger
-    console.log(hostString, STATES[mongoose.connection.readyState]);
+
+    logger.info(hostString, STATES[mongoose.connection.readyState]);
   });
 };
 

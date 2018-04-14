@@ -6,6 +6,7 @@ import cors from 'cors';
 import logger from 'morgan';
 import routes from './routes';
 import { connect } from './../util/db';
+import { httpLogger } from './middlewares';
 
 const app = express();
 const envirnoment = process.env.NODE_ENV || 'development';
@@ -20,6 +21,10 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(validator());
+
+if (envirnoment !== 'development' && envirnoment !== 'test') {
+  app.use(httpLogger);
+}
 
 app.use('/v1', routes);
 
