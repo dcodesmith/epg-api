@@ -1,6 +1,7 @@
 test.csv
 .DS_Store
 *.txt
+*.log
 
 coverage
 dist

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import winston from 'winston';
+
+import logger from './logger';
 
 const {
   DATABASEUSER,
@@ -40,12 +41,12 @@ const getReplicaHostString = () => {
 const connectWithRetry = (hostString, options) => {
   mongoose.connect(hostString, options, (error) => {
     if (error) {
-      winston.error('Failed to connect to mongo on startup - retrying in 5 sec', error);
+      logger.error('Failed to connect to mongo on startup - retrying in 5 sec', error);
       mongoose.disconnect();
       setTimeout(connectWithRetry.bind(null, hostString, options), RECONNECT_TIME);
     }
-    // TODO: replace with winston logger
-    console.log(hostString, STATES[mongoose.connection.readyState]);
+
+    logger.info(hostString, STATES[mongoose.connection.readyState]);
   });
 };
 

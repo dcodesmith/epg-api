@@ -1,13 +1,12 @@
 import server from './src/server';
+import logger from './util/logger';
 
 const { PORT = 8000, NODE_ENV = 'development' } = process.env;
-const port = PORT;
-const environment = NODE_ENV;
 
-server.listen(port, () => {
-  console.log(`started app on port ${port} on ${environment} environment`);
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error(`Possibly Unhandled Rejection at: Promise, ${promise}, reason: ${reason}`);
 });
 
-process.on('unhandledRejection', (error, p) => { // eslint-disable-line no-unused-vars
-  // TODO: use logger only on development ENV
+server.listen(PORT, () => {
+  logger.info(`Server started on port ${PORT} on ${NODE_ENV} environment`);
 });
