@@ -5,7 +5,7 @@ import {
   BAD_REQUEST,
   NO_CONTENT
 } from 'http-status';
-import handler from './../../util/handler';
+import handler from './helpers/handler';
 
 const errorHandler = (next, err) => {
   const error = new Error(err);

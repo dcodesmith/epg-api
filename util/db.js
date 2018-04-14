@@ -28,17 +28,11 @@ const createDbCredentialString = () => {
 
 const getReplicaHostString = () => {
   const hosts = DBSERVERS.split(',');
-  const hostsArray = [];
   const dbCredentials = createDbCredentialString();
-  let dbUrl;
 
-  hosts.forEach((db) => {
-    dbUrl = `mongodb://${dbCredentials}${db}:${DATABASEPORT}/${DATABASENAME}`;
-
-    hostsArray.push(dbUrl);
-  });
-
-  return hostsArray.join(',');
+  return hosts
+    .map(host => `mongodb://${dbCredentials}${host}:${DATABASEPORT}/${DATABASENAME}`)
+    .join(',');
 };
 
 // http://bites.goodeggs.com/posts/reconnecting-to-mongodb-when-mongoose-connect-fails-at-startup/

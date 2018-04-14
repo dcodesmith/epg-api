@@ -1,7 +1,7 @@
 import csv from 'fast-csv';
 import find from 'lodash/find';
 
-import Programme from './model/Programme';
+import Programme from './models/Programme';
 
 /*
 |---------------------------------------------------------------

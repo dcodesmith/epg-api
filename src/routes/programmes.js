@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import programme from '../controller/programme';
+import programme from '../controllers/programme';
 
 const {
   create,
