@@ -11,7 +11,9 @@ export NVM_DIR=$HOME/.nvm
 nvm install 8
 nvm use 8.9.4
 
-export NODE_ENV=production
+# Set production env variables
+export env $(cat config/.production.env)
+
 export NVM_BIN=$HOME/.nvm/versions/node/v8.9.4/bin
 
 echo 'changing directory to /srv/www/node/app ...'
@@ -27,7 +29,4 @@ cp -rf dist/* . && \
 echo 'removing dist directory from current directory ...'
 rm -rf dist && \
 
-# Set production env variables
-export env $(cat config/.production.env)
-
-$NVM_BIN/npm i
+$NVM_BIN/npm install
