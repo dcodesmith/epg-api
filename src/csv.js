@@ -1,7 +1,8 @@
 import csv from 'fast-csv';
 import find from 'lodash/find';
+import Joi from 'joi';
 
-import Programme from './models/Programme';
+import schema from './validation-schema';
 
 /*
 |---------------------------------------------------------------
@@ -26,9 +27,8 @@ export default (csvData, channels, callbackFn) => {
 
     const onValidateRow = (row, next) => {
       let isRowValid = true;
-      const programme = new Programme(row);
 
-      programme.validate((error) => {
+      Joi.validate(row, schema, (error) => {
         if (error) {
           isRowValid = !isRowValid;
         }
@@ -39,7 +39,7 @@ export default (csvData, channels, callbackFn) => {
 
     const onInvalidRow = (invalidRow, rowNumber) => {
       invalidRows.push({
-        row: rowNumber,
+        row: rowNumber + 1,
         data: invalidRow
       });
     };
@@ -47,7 +47,7 @@ export default (csvData, channels, callbackFn) => {
     const onData = validRow => validRows.push(validRow);
 
     const onEnd = () => {
-      const errors = invalidRows.map(row => ({ row: row.rowNumber, data: row.data }));
+      const errors = invalidRows.map(({ row, data }) => ({ row, data }));
 
       if (errors.length) {
         if (callbackFn) {

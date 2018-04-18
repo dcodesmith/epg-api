@@ -3,7 +3,7 @@ import createdModified from './plugins/createdModified';
 import crud from './plugins/crud';
 // import moment from 'moment-timezone';
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 const ProgrammeSchema = new Schema({
   channel: {
     type: Schema.Types.ObjectId,
