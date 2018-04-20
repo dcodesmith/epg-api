@@ -1,10 +1,12 @@
 import stream from 'stream';
 import HTTPStatus from 'http-status';
 import waterfall from 'async/waterfall';
+
 import parseCSV from '../csv';
 import Programme from '../models/Programme';
 import Channel from '../models/Channel';
 import createController from './index';
+import { NoCSVFileException } from '../exceptions';
 
 const errorHandler = (next, err) => {
   if (err) {
@@ -20,14 +22,7 @@ const importCSV = (request, response, next) => {
   const { file } = request;
 
   if (!file) {
-    // TODO: NoCSVFile exception
-    response
-      .status(HTTPStatus.BAD_REQUEST)
-      .json({
-        message: 'no csv file found'
-      });
-
-    return;
+    throw new NoCSVFileException();
   }
 
   bufferStream.end(file.buffer);
