@@ -2,11 +2,10 @@ import del from 'del';
 import gulp from 'gulp';
 import path from 'path';
 import runSequence from 'run-sequence';
-import babelCompiler from 'babel-core/register';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import yargs from 'yargs';
 
-const argv = yargs.argv;
+const { argv } = yargs;
 const plugins = gulpLoadPlugins();
 
 const paths = {
@@ -19,15 +18,12 @@ const paths = {
   build: 'dist'
 };
 
-gulp.task('clean', () =>
-  del(['dist/**', '!dist'])
-);
+gulp.task('clean', () => del(['dist/**', '!dist']));
 
 gulp.task('copy', () =>
   gulp.src(paths.nonJs)
     .pipe(plugins.newer(paths.build))
-    .pipe(gulp.dest(paths.build))
-);
+    .pipe(gulp.dest(paths.build)));
 
 gulp.task('babel', () =>
   gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
@@ -40,17 +36,15 @@ gulp.task('babel', () =>
         return path.relative(file.path, __dirname);
       }
     }))
-    .pipe(gulp.dest(paths.build))
-);
+    .pipe(gulp.dest(paths.build)));
 
 gulp.task('nodemon', ['copy', 'babel'], () =>
   plugins.nodemon({
-    script: path.join(paths.build, 'index.js'),
+    script: path.join(paths.build, 'src', 'index.js'),
     ext: 'js',
     ignore: ['node_modules/**/*.js', 'dist/**/*.js'],
     tasks: ['copy', 'babel']
-  })
-);
+  }));
 
 gulp.task('test', () => {
   let exitCode = 0;
@@ -77,6 +71,4 @@ gulp.task('test', () => {
 
 gulp.task('serve', ['clean'], () => runSequence('nodemon'));
 
-gulp.task('default', ['clean'], () => {
-  runSequence(['copy', 'babel']);
-});
+gulp.task('default', ['clean'], () => runSequence(['copy', 'babel']));
