@@ -1,25 +1,19 @@
 import stream from 'stream';
-import HTTPStatus from 'http-status';
-import waterfall from 'async/waterfall';
+import { promisify } from 'util';
+import { CREATED } from 'http-status';
 
+import createController from './index';
 import parseCSV from '../csv';
 import Programme from '../models/Programme';
 import Channel from '../models/Channel';
-import createController from './index';
-import { NoCSVFileException } from '../exceptions';
+import { NoCSVFileException, InvalidCSVFileException } from '../exceptions';
 
-const errorHandler = (next, err) => {
-  if (err) {
-    const error = new Error(err);
-    error.status = 400;
-
-    next(error);
-  }
-};
-
-const importCSV = (request, response, next) => {
+const importCSV = async (request, response) => {
   const bufferStream = new stream.PassThrough();
   const { file } = request;
+  let channels;
+  let programmes;
+  let parsedCSV;
 
   if (!file) {
     throw new NoCSVFileException();
@@ -27,28 +21,31 @@ const importCSV = (request, response, next) => {
 
   bufferStream.end(file.buffer);
 
-  const getAllChannels = callback => Channel.find(callback);
-  const parse = (channels, callback) => parseCSV(bufferStream, channels, callback);
-  const saveProgrammes = (programmes, callback) => Programme.create(programmes, callback);
-  const getAllProgrammes = (results, callback) => {
-    // TODO - Refactor to use callback
-    Programme
-      .find()
-      .populate('channel')
-      .then(programmes => callback(null, programmes))
-      .catch(callback);
-  };
+  try {
+    channels = await Channel.find();
+  } catch (error) {
+    throw new NoCSVFileException(); // FIX!
+  }
 
-  const tasks = [getAllChannels, parse, saveProgrammes, getAllProgrammes];
+  try {
+    parsedCSV = await promisify(parseCSV)(bufferStream, channels);
+  } catch (error) {
+    throw new InvalidCSVFileException(error);
+  }
 
-  waterfall(tasks, (error, result) => {
-    if (error) {
-      // check the error type
-      return errorHandler(next, error);
-    }
+  try {
+    await Programme.create(parsedCSV);
+  } catch (error) {
+    throw new NoCSVFileException(); // FIX!
+  }
 
-    return response.status(HTTPStatus.CREATED).json(result);
-  });
+  try {
+    programmes = await Programme.find().populate('channel');
+  } catch (error) {
+    throw new NoCSVFileException(); // FIX!
+  }
+
+  response.status(CREATED).json(programmes);
 };
 
 export default createController(Programme, { importCSV });
