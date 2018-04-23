@@ -9,15 +9,16 @@ const errorStatusCodeMap = {
   InvalidCSVFileException: UNPROCESSABLE_ENTITY
 };
 
-export default (error, request, response, next) => { // eslint-disable-line no-unused-vars
+export default (err, request, response, next) => { // eslint-disable-line no-unused-vars
   const {
     name: errorType,
-    message: errorMessage
-  } = error;
+    message: errorMessage,
+    error = {}
+  } = err;
 
   const errorStatusCode = errorStatusCodeMap[errorType] || INTERNAL_SERVER_ERROR;
 
   response
     .status(errorStatusCode)
-    .json({ message: errorMessage });
+    .json({ message: errorMessage, error });
 };
