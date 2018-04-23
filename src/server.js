@@ -4,7 +4,7 @@ import validator from 'express-validator';
 import cors from 'cors';
 import logger from 'morgan';
 import routes from './routes';
-import { connect } from './util/db';
+import { connect } from './persistence/mongoose';
 import { httpLogger, errorHandler } from './middlewares';
 
 const app = express();
