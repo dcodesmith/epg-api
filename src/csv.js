@@ -4,27 +4,12 @@ import Joi from 'joi';
 
 import schema from './validation-schema';
 
-/*
-|---------------------------------------------------------------
-| Usage
-|---------------------------------------------------------------
-| As a Promise -> parseCSV(bufferStream, channels)
-|                   .then((programmes) => {
-|                     callback(null, programmes);
-|                   }).catch(callback);
-|
-| As a callback -> parseCSV(bufferStream, channels, callbackFn);
-|
-*/
-
 export default (csvData, channels, callbackFn) => {
   const options = { trim: true, headers: true };
   const validRows = [];
   const invalidRows = [];
 
-  const parser = (...args) => {
-    const [resolve, reject] = args;
-
+  const parser = () => {
     const onValidateRow = (row, next) => {
       let isRowValid = true;
 
@@ -50,18 +35,10 @@ export default (csvData, channels, callbackFn) => {
       const errors = invalidRows.map(({ row, data }) => ({ row, data }));
 
       if (errors.length) {
-        if (callbackFn) {
-          return callbackFn(errors, null);
-        }
-
-        return reject(errors);
+        return callbackFn(errors, null);
       }
 
-      if (callbackFn) {
-        return callbackFn(null, validRows);
-      }
-
-      return resolve(validRows);
+      return callbackFn(null, validRows);
     };
 
     const onTransform = (row) => {
@@ -82,9 +59,5 @@ export default (csvData, channels, callbackFn) => {
       .on('end', onEnd);
   };
 
-  if (callbackFn) {
-    return parser();
-  }
-
-  return new Promise(parser);
+  return parser();
 };
