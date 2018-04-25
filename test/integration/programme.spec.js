@@ -13,7 +13,7 @@ import app from '../../src/server';
 
 const baseUrl = '/v1/programmes';
 const assertRequest = helper.assertRequest(baseUrl); // eslint-disable-line no-redeclare
-const request = helper.promisifyRequest(baseUrl);
+const request = helper.request(baseUrl);
 const channelMockData = cloneDeep(channelData);
 const clonedMockData = programmeMockData.map((data) => {
   const clonedData = data;

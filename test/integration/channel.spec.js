@@ -4,32 +4,25 @@ import mongoose from 'mongoose';
 import HTTPStatus from 'http-status';
 import { cloneDeep } from 'lodash';
 import Channel from '../../src/models/Channel';
-import { promisifyRequest, assert } from '../helper';
+import { request as req, assert } from '../helper';
 import mockData from '../fixtures/channels';
 
 const baseUrl = '/v1/channels';
-const request = promisifyRequest(baseUrl);
+const request = req(baseUrl);
 
-describe(`${baseUrl}`, () => {
-  after((done) => {
-    Channel.remove(done);
-  });
+describe.only(`${baseUrl}`, () => {
+  after(async () => Channel.remove());
 
   context('POST', () => {
     describe('Given there are no channels', () => {
-      after((done) => {
-        Channel.remove(done);
-      });
+      after(async () => Channel.remove());
 
       describe('When a request is made to create a new channel', () => {
         const channel = mockData[0];
-        let response = {};
+        let response;
 
-        before((done) => {
-          request({ data: channel }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ data: channel });
         });
 
         it('should create one channel', () => {
@@ -45,15 +38,12 @@ describe(`${baseUrl}`, () => {
         });
       });
 
-      describe.skip('When a request is made to create 4 new channels', () => {
-        const channels = mockData;
-        let response = {};
+      describe('When a request is made to create 4 new channels', () => {
+        const channels = [...mockData];
+        let response;
 
-        before((done) => {
-          request({ data: channels }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ data: channels });
         });
 
         it('should create 4 channels', () => {
@@ -71,13 +61,10 @@ describe(`${baseUrl}`, () => {
 
       describe('And the data to be posted is invalid', () => {
         describe('When a request is made to create a channel', () => {
-          let response = {};
+          let response;
 
-          before((done) => {
-            request({}).then((res) => {
-              response = res;
-              done();
-            });
+          before(async () => {
+            response = await request();
           });
 
           it('should have error messages matching the invalid fields', () => {
@@ -92,17 +79,13 @@ describe(`${baseUrl}`, () => {
     });
   });
 
-  context('GET', () => {
+  context('READ', () => {
     describe('Given there are 4 Channels', () => {
       const clonedMockData = cloneDeep(mockData);
 
-      before((done) => {
-        Channel.create(clonedMockData, done);
-      });
+      before(async () => Channel.create(clonedMockData));
 
-      after((done) => {
-        Channel.remove(done);
-      });
+      after(async () => Channel.remove());
 
       describe('When the 4 channels are requested', () => {
         let response;
@@ -322,22 +305,15 @@ describe(`${baseUrl}`, () => {
       const channel = cloneDeep(mockData[2]);
       channel._id = channelId;
 
-      before((done) => {
-        Channel.create(channel, done);
-      });
+      before(async () => Channel.create(channel));
 
-      after((done) => {
-        Channel.remove(channel, done);
-      });
+      after(async () => Channel.remove(channel));
 
       describe('When a request is made to update the channel with a new name', () => {
         let response;
 
-        before((done) => {
-          request({ method: 'put', path: channelId, data: { show: 'A new show' } }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ method: 'put', path: channelId, data: { show: 'A new show' } });
           // TODO: GET request to confirm that items updated
         });
 
@@ -353,11 +329,8 @@ describe(`${baseUrl}`, () => {
       describe('When a request is made to update the channel with an invalid query', () => {
         let response;
 
-        before((done) => {
-          request({ method: 'put', path: channelId, data: { name: {} } }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ method: 'put', path: channelId, data: { name: {} } });
         });
 
         it('should update the specified channel and return an empty object', () => {
@@ -376,11 +349,8 @@ describe(`${baseUrl}`, () => {
       describe('When a request is made to updade the channel', () => {
         let response;
 
-        before((done) => {
-          request({ method: 'put', path: nonExistentChannelId }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ method: 'put', path: nonExistentChannelId });
         });
 
         it('404', () => {
@@ -396,22 +366,15 @@ describe(`${baseUrl}`, () => {
       const channel = cloneDeep(mockData[0]);
       channel._id = channelId;
 
-      before((done) => {
-        Channel.create(channel, done);
-      });
+      before(async () => Channel.create(channel));
 
-      after((done) => {
-        Channel.remove(channel, done);
-      });
+      after(async () => Channel.remove(channel));
 
       describe('When a request is made to delete the channel', () => {
         let response;
 
-        before((done) => {
-          request({ method: 'del', path: channelId }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ method: 'del', path: channelId });
         });
 
         it('should delete the specified channel and return an empty object', () => {
@@ -427,13 +390,10 @@ describe(`${baseUrl}`, () => {
         let response;
         // let invalidChannel;
 
-        before((done) => {
+        before(async () => {
           // invalidChannel = cloneDeep(mockData[0]);
           // invalidChannel.code = '';
-          request({ method: 'del', path: 'channelId' }).then((res) => {
-            response = res;
-            done();
-          });
+          response = await request({ method: 'del', path: 'channelId' });
         });
 
         it('should return an error message', () => {
@@ -452,11 +412,8 @@ describe(`${baseUrl}`, () => {
       describe('When a request is made to delete the channel', () => {
         let response;
 
-        before((done) => {
-          request({ method: 'del', path: nonExistentChannelId }).then((res) => {
-            response = res;
-            done();
-          });
+        before(async () => {
+          response = await request({ method: 'del', path: nonExistentChannelId });
         });
 
         it('204', () => {

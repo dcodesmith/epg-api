@@ -5,6 +5,7 @@ import {
   BAD_REQUEST,
   NO_CONTENT
 } from 'http-status';
+
 import handler from './helpers/handler';
 
 const errorHandler = (next, err) => {
@@ -24,6 +25,7 @@ export default (model, extra) => {
     create(request, response, next) {
       create(request, (error, items) => {
         if (error) {
+          // console.log('inna hia?????', error instanceof mongoose.Error.ValidationError);
           return errorHandler(next, error);
         }
 
