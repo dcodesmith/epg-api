@@ -15,12 +15,14 @@ const errorHandler = (next, err) => {
 };
 
 export default (model, extra) => {
-  const modelHandler = handler(model);
+  const {
+    create, read, update, delete: del
+  } = handler(model);
 
   /* eslint-disable consistent-return */
   return Object.assign({}, {
     create(request, response, next) {
-      modelHandler.create(request, (error, items) => {
+      create(request, (error, items) => {
         if (error) {
           return errorHandler(next, error);
         }
@@ -30,7 +32,7 @@ export default (model, extra) => {
     },
 
     readAll(request, response, next) {
-      modelHandler.read.all(request, (error, items) => {
+      read.all(request, (error, items) => {
         if (error) {
           return errorHandler(next, error);
         }
@@ -40,7 +42,7 @@ export default (model, extra) => {
     },
 
     readOne(request, response, next) {
-      modelHandler.read.one(request, (error, item) => {
+      read.one(request, (error, item) => {
         if (error) {
           return errorHandler(next, error);
         }
@@ -54,7 +56,7 @@ export default (model, extra) => {
     },
 
     update(request, response, next) {
-      modelHandler.update(request, (error, item) => {
+      update(request, (error, item) => {
         if (error) {
           return errorHandler(next, error);
         }
@@ -68,7 +70,7 @@ export default (model, extra) => {
     },
 
     del(request, response, next) {
-      modelHandler.delete(request, (error, item) => {
+      del(request, (error, item) => {
         if (error) {
           return errorHandler(next, error);
         }

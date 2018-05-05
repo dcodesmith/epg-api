@@ -1,4 +1,4 @@
-import server from './src/server';
+import server from './server';
 import logger from './util/logger';
 
 const { PORT = 8000, NODE_ENV = 'development' } = process.env;
