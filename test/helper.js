@@ -1,42 +1,32 @@
 import supertest from 'supertest';
 import { expect } from 'chai';
-import app from '../src/server';
+import server from '../src/server';
 
-const request = supertest(app);
+const app = supertest(server);
 
-function assertRequest(baseUrl) {
-  return function (options, done) {
-    const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
+const assertRequest = baseUrl => (options, done) => {
+  const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
 
-    request[options.method || 'post'](url)
-      .send(options.data || {})
-      .expect(options.statusCode)
-      .end((err) => {
-        if (err) {
-          return done(err);
-        }
-        return done();
-      });
-  };
-}
+  app[options.method || 'post'](url)
+    .send(options.data || {})
+    .expect(options.statusCode)
+    .end((error) => {
+      if (error) {
+        return done(error);
+      }
 
-function promisifyRequest(baseUrl) {
-  return function (options) {
-    return new Promise((resolve, reject) => {
-      const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
-
-      request[options.method || 'post'](url)
-        .send(options.data || {})
-        .query(options.query || {})
-        .end((err, res) => {
-          if (err) {
-            return reject(err);
-          }
-          return resolve(res);
-        });
+      return done();
     });
-  };
-}
+};
+
+const request = baseUrl => (options = {}) => {
+  const url = options.path ? `${baseUrl}/${options.path}` : baseUrl;
+  const { method = 'post', data = {}, query = {} } = options;
+
+  return app[method](url)
+    .send(data)
+    .query(query);
+};
 
 function assert(actual, expected) {
   if (!Array.isArray(actual)) {
@@ -50,13 +40,14 @@ function assert(actual, expected) {
 }
 
 function _assert(actual, expected) {
-  for (let key in expected) {
+  Object.keys(expected).forEach((key) => {
     if (key === 'channel') {
-      // console.log('channel', typeof actual[key], typeof expected[key]);
+      // eslint-disable-next-line no-param-reassign
       expected[key] = String(expected[key]);
     }
+
     expect(actual[key]).to.equal(expected[key]);
-  }
+  });
 }
 
-export { assertRequest, promisifyRequest, assert };
+export { assertRequest, request, assert };

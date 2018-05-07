@@ -11,7 +11,6 @@ const {
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-
 export default router
   .post('/', create)
   .put('/:id', update)
