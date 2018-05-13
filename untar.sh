@@ -24,7 +24,7 @@ cp -rf build/* . && \
 echo 'removing package.tgz build from current directory ...'
 rm -rf package.tgz build && \
 echo 'copying contents of dist directory into current directory ...'
-cp -rf dist/* . && \
+cp -rf app.yml dist/* . && \
 echo 'removing test directory from current directory ...'
 rm -rf test && \
 echo 'removing dist directory from current directory ...'
