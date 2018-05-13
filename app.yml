@@ -1,5 +1,5 @@
 apps:
-  - script    : index.js
+  - script    : src/index.js
     name      : 'epg-api'
     instances : 4
     exec_mode : cluster
