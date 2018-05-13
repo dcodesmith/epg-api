@@ -13,9 +13,6 @@ nvm install 8
 
 nvm use 8
 
-# Set production env variables
-export env $(cat config/.production.env)
-
 export NVM_BIN=$HOME/.nvm/versions/node/v8.11.1/bin
 
 echo 'changing directory to /srv/www/node/app ...'
@@ -32,6 +29,9 @@ echo 'removing test directory from current directory ...'
 rm -rf test && \
 echo 'removing dist directory from current directory ...'
 rm -rf dist && \
+
+echo 'Set production env variables ...'
+export env $(cat config/.production.env)
 
 echo 'Check node environment ...'
 echo $NODE_ENV
