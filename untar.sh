@@ -22,8 +22,8 @@ echo 'unziping package.tgz into current directory ...'
 tar zxvf package.tgz -C . && \
 echo 'copying contents of build directory into current directory ...'
 cp -rf build/* . && \
-echo 'removing package.tgz build utils index.js from current directory ...'
-rm -rf package.tgz build utils index.js && \
+echo 'removing package.tgz build from current directory ...'
+rm -rf package.tgz build && \
 echo 'copying contents of dist directory into current directory ...'
 cp -rf dist/* . && \
 echo 'removing dist directory from current directory ...'
