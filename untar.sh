@@ -28,9 +28,12 @@ echo 'removing package.tgz build from current directory ...'
 rm -rf package.tgz build && \
 echo 'copying contents of dist directory into current directory ...'
 cp -rf dist/* . && \
+echo 'removing test directory from current directory ...'
+rm -rf test && \
 echo 'removing dist directory from current directory ...'
 rm -rf dist && \
 
-echo 'Check node version ...'
-node -v
+echo 'Check node environment ...'
+echo $NODE_ENV
+
 $NVM_BIN/npm install
