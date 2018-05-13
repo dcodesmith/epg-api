@@ -1,0 +1,9 @@
+apps:
+  - script    : index.js
+    name      : 'epg-api'
+    instances : 4
+    exec_mode : cluster
+    watch     : true
+    env       :
+      NODE_ENV        : production
+      PORT            : 8010
