@@ -16,7 +16,7 @@ nvm use 8
 # Set production env variables
 export env $(cat config/.production.env)
 
-export NVM_BIN=$HOME/.nvm/versions/node/v8.9.4/bin
+export NVM_BIN=$HOME/.nvm/versions/node/v8.11.1/bin
 
 echo 'changing directory to /srv/www/node/app ...'
 cd /srv/www/node/app && \
