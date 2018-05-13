@@ -37,3 +37,5 @@ echo 'Check node environment ...'
 echo $NODE_ENV
 
 $NVM_BIN/npm install
+
+pm2 start app.yml
