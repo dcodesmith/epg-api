@@ -8,8 +8,10 @@ set -x
 export NVM_DIR=$HOME/.nvm
 [ -s $NVM_DIR/nvm.sh ] && . $NVM_DIR/nvm.sh
 
+echo 'Installing node ....'
 nvm install 8
-nvm use 8.9.4
+
+nvm use 8
 
 # Set production env variables
 export env $(cat config/.production.env)
@@ -29,4 +31,6 @@ cp -rf dist/* . && \
 echo 'removing dist directory from current directory ...'
 rm -rf dist && \
 
+echo 'Check node version ...'
+node -v
 $NVM_BIN/npm install
