@@ -1,37 +1,27 @@
 language: node_js
-
 node_js:
-  - 8
-
+- 8
 services:
-  - mongodb
-
+- mongodb
 addons:
   ssh_known_hosts:
-    - 162.243.207.143
-
+  - 162.243.207.143
 branches:
   only:
-    - master
-
+  - master
 env:
   global:
-    - REMOTE_APP_DIR=/srv/www/node/app/
-    - REMOTE_USER=deploy
-    - REMOTE_HOST=162.243.207.143
-
+  - REMOTE_APP_DIR=/srv/www/node/app/
+  - REMOTE_USER=deploy
+  - REMOTE_HOST=162.243.207.143
 before_install:
-  - "./scripts/install.sh"
-  - yarn global add gulp
-  - yarn add -D gulp
-
+- openssl aes-256-cbc -K $encrypted_3471f576b911_key -iv $encrypted_3471f576b911_iv
+  -in deploy-key.enc -out deploy-key -d
+- "./scripts/install.sh"
+- yarn global add gulp
+- yarn add -D gulp
 before_script:
-  - yarn
-  - yarn build
-
-# after_script:
-#   - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf coverage
-#   - rm -rf *
-
+- yarn
+- yarn build
 after_success:
-  - "./scripts/deploy.sh"
+- "./scripts/deploy.sh"
