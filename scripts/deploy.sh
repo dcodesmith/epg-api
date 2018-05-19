@@ -3,6 +3,8 @@ set -x
 
 chmod u+w config/.production.env
 export PROD_ENV_FILE=config/.production.env
+echo $PROD_ENV_FILE
+[ -f config/.production.env ] && echo "File exist" || echo "File does not exist"
 
 mkdir build && \
 cat "$DATABASEPASSWORD" >> "$PROD_ENV_FILE"
