@@ -7,8 +7,8 @@ echo $PROD_ENV_FILE
 [ -f config/.production.env ] && echo "File exist" || echo "File does not exist"
 
 mkdir build && \
-cat "$DATABASEPASSWORD" >> "$PROD_ENV_FILE"
-cat "$LOGGLYTOKEN" >> "$PROD_ENV_FILE"
+cat $DATABASEPASSWORD >> $PROD_ENV_FILE
+cat $LOGGLYTOKEN >> $PROD_ENV_FILE
 
 ls -al config
 
