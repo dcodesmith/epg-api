@@ -8,6 +8,8 @@ mkdir build && \
 cat "$DATABASEPASSWORD" >> "$PROD_ENV_FILE"
 cat "$LOGGLYTOKEN" >> "$PROD_ENV_FILE"
 
+ls -al config
+
 cat config/.production.env
 
 cp -rf dist app.yml config package.json build && \
