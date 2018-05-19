@@ -1,14 +1,19 @@
 language: node_js
+
 node_js:
-- 8
-services:
-- mongodb
+  - 8
+
+  services:
+  - mongodb
+
 addons:
   ssh_known_hosts:
-  - 162.243.207.143
+    - 162.243.207.143
+
 branches:
   only:
-  - master
+    - master
+
 env:
   global:
   - REMOTE_APP_DIR=/srv/www/node/app/
@@ -22,8 +27,10 @@ before_install:
   - "./scripts/install.sh"
   - yarn global add gulp
   - yarn add -D gulp
+
 before_script:
   - yarn
   - yarn build
+
 after_success:
   - "./scripts/deploy.sh"
