@@ -1,10 +1,12 @@
 #!/usr/bin/env sh
 set -x
 
+export PROD_ENV_FILE=config/.production.env
+
 mkdir build && \
 
-cat "$DATABASEPASSWORD" >> config/.production.env
-cat "$LOGGLYTOKEN" >> config/.production.env
+cat "$DATABASEPASSWORD" >> "$PROD_ENV_FILE"
+cat "$LOGGLYTOKEN" >> "$PROD_ENV_FILE"
 
 cat config/.production.env
 

@@ -17,16 +17,22 @@ export NVM_BIN=$HOME/.nvm/versions/node/v8.11.1/bin
 
 echo 'changing directory to /srv/www/node/app ...'
 cd /srv/www/node/app && \
+
 echo 'unziping package.tgz into current directory ...'
 tar zxvf package.tgz -C . && \
+
 echo 'copying contents of build directory into current directory ...'
 cp -rf build/* . && \
+
 echo 'removing package.tgz build from current directory ...'
 rm -rf package.tgz build && \
+
 echo 'copying contents of dist directory into current directory ...'
 cp -rf app.yml dist/* . && \
+
 echo 'removing test directory from current directory ...'
 rm -rf test && \
+
 echo 'removing dist directory from current directory ...'
 rm -rf dist && \
 
