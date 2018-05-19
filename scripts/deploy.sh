@@ -1,16 +1,12 @@
 #!/usr/bin/env sh
 set -x
 
-chmod u+w config/.production.env
 export PROD_ENV_FILE=config/.production.env
-echo $PROD_ENV_FILE
-[ -f config/.production.env ] && echo "File exist" || echo "File does not exist"
+
+echo "DATABASEPASSWORD=$DATABASEPASSWORD" >> $PROD_ENV_FILE
+echo "LOGGLYTOKEN=$LOGGLYTOKEN" >> $PROD_ENV_FILE
 
 mkdir build && \
-echo $DATABASEPASSWORD >> $PROD_ENV_FILE
-echo $LOGGLYTOKEN >> $PROD_ENV_FILE
-
-ls -al config
 
 cat config/.production.env
 
